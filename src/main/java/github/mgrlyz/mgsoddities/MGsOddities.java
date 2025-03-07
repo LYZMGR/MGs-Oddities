@@ -40,7 +40,9 @@ public class MGsOddities
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(ModItems.TEST);
+            event.accept(ModItems.PARAGON_CONTROL_CIRCUIT);
+            event.accept(ModItems.APOTHEOSIS_CONTROL_CIRCUIT);
+            event.accept(ModItems.ALLOY_PRIMORDIAL);
         }
     }
 
