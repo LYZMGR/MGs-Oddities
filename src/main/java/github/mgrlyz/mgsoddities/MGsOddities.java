@@ -40,10 +40,10 @@ public class MGsOddities
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            //注册控制电路
+            //控制电路
             event.accept(ModItems.PARAGON_CONTROL_CIRCUIT);
             event.accept(ModItems.APOTHEOSIS_CONTROL_CIRCUIT);
-            //注册对应电路的合金
+            //对应电路的合金
             event.accept(ModItems.ALLOY_PRIMORDIAL);
             event.accept(ModItems.ALLOY_AETHER);
         }
