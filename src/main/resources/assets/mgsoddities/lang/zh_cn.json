@@ -1,5 +1,6 @@
 {
-  "item.mgsoddities.paragon_control_circuit": "§6§l煌极控制电路",
-  "item.mgsoddities.apotheosis_control_circuit": "§6§l神枢控制电路",
-  "item.mgsoddities.alloy_primordial": "§6§l元极合金"
+  "item.mgsoddities.paragon_control_circuit": "§6§l辉煌控制电路",
+  "item.mgsoddities.alloy_primordial": "§6§l元极合金",
+  "item.mgsoddities.apotheosis_control_circuit": "§b§l神枢控制电路",
+  "item.mgsoddities.alloy_aether": "§b§l虚渊合金"
 }

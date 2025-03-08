@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mgsoddities:item/apotheosis_control_circuit"
+  }
+}
