@@ -1,0 +1,18 @@
+{
+  "registryName": "stellar_forge",
+  "localizedName": "御星天炉",
+  "color": "#ffe81ecd",
+  "structure": {
+    "pattern": [
+      ["ccc", "ccc", "ccc"],
+      ["bmb", "i i", "bib"],
+      ["bib", "igi", "bib"]
+    ],
+    "keys": {
+      "c": "#modular_machinery_reborn:all_casing",
+      "i": "minecraft:iron_block",
+      "b": "minecraft:iron_bars",
+      "g": "minecraft:glass"
+    }
+  }
+}

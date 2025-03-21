@@ -1,12 +1,13 @@
 package github.mgrlyz.mgsoddities;
 
-import github.mgrlyz.mgsoddities.item.ModItems;
+import github.mgrlyz.mgsoddities.registries.MGsOdditiesCreativeTabs;
+import github.mgrlyz.mgsoddities.registries.MGsOdditiesItems;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
 
-import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,33 +21,38 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 @Mod(MGsOddities.MODID)
-public class MGsOddities
-{
+public class MGsOddities {
     public static final String MODID = "mgsoddities";
     private static final Logger OGGER = LogUtils.getLogger();
 
-    public MGsOddities(IEventBus modEventBus, ModContainer modContainer)
+    public static final Logger logger = LogUtils.getLogger();
+
+    public MGsOddities(ModContainer modContainer, IEventBus modEventBus)
     {
         modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.register(this);
-
-        ModItems.register(modEventBus);
-
+        MGsOdditiesItems.register(modEventBus);
         modEventBus.addListener(this::addCreative);
+        MGsOdditiesCreativeTabs.CREATIVE_TABS.register(modEventBus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            //控制电路
-            event.accept(ModItems.PARAGON_CONTROL_CIRCUIT);
-            event.accept(ModItems.APOTHEOSIS_CONTROL_CIRCUIT);
-            //对应电路的合金
-            event.accept(ModItems.ALLOY_PRIMORDIAL);
-            event.accept(ModItems.ALLOY_AETHER);
-        }
+//        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+//            //控制电路
+//            event.accept(MGsOdditiesItems.PARAGON_CONTROL_CIRCUIT);
+//            event.accept(MGsOdditiesItems.APOTHEOSIS_CONTROL_CIRCUIT);
+//            //对应电路的合金
+//            event.accept(MGsOdditiesItems.ALLOY_PRIMORDIAL);
+//            event.accept(MGsOdditiesItems.ALLOY_AETHER);
+//
+//            event.accept(MGsOdditiesItems.NETHER_ESSENCE);
+//            event.accept(MGsOdditiesItems.DARK_MATTER);
+//            event.accept(MGsOdditiesItems.AETHER_ESSENCE);
+//            event.accept(MGsOdditiesItems.ASTRAL_THREADS);
+//        }
     }
 
     @SubscribeEvent
@@ -58,5 +64,9 @@ public class MGsOddities
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
         }
+    }
+
+    public static ResourceLocation rl(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MGsOddities.MODID, path);
     }
 }

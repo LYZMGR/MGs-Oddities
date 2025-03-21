@@ -1,6 +1,11 @@
 {
-  "item.mgsoddities.paragon_control_circuit": "§6§l辉煌控制电路",
+  "constants.mgsoddities.mod_name": "MG的奇思妙想",
+  "item.mgsoddities.aether_essence": "虚空精华",
+  "item.mgsoddities.alloy_aether": "§b§l虚渊合金",
   "item.mgsoddities.alloy_primordial": "§6§l元极合金",
   "item.mgsoddities.apotheosis_control_circuit": "§b§l神枢控制电路",
-  "item.mgsoddities.alloy_aether": "§b§l虚渊合金"
+  "item.mgsoddities.astral_threads": "星界丝缕",
+  "item.mgsoddities.dark_matter": "暗物质",
+  "item.mgsoddities.nether_essence": "地狱精华",
+  "item.mgsoddities.paragon_control_circuit": "§6§l辉煌控制电路"
 }

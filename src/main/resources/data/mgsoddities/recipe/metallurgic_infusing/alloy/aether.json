@@ -1,0 +1,16 @@
+{
+  "type": "mekanism:metallurgic_infusing",
+  "chemical_input": {
+    "amount": 2,
+    "item": "mgsoddities:aether_essence"
+  },
+  "item_input": {
+    "count": 1,
+    "item": "mgsoddities:alloy_primordial"
+  },
+  "output": {
+    "count": 1,
+    "id": "mgsoddities:alloy_aether"
+  },
+  "per_tick_usage": false
+}
