@@ -1,7 +1,7 @@
 package github.mgrlyz.mgsoddities.block.attribute;
 
+import github.mgrlyz.mgsoddities.tile.base.TileEntityMGsOddities;
 import mekanism.common.block.states.BlockStateHelper;
-import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -107,33 +107,33 @@ public class Attributes {
               WorldUtils.isInsideFormedMultiblock(level, pos, mob) ? PathType.DAMAGE_OTHER : null);
     }
 
-//    public static class AttributeRedstoneEmitter<TILE extends TileEntityMekanism> implements Attribute.TileAttribute<TILE> {
-//
-//        private final ToIntBiFunction<TILE, Direction> redstoneFunction;
-//
-//        public AttributeRedstoneEmitter(ToIntBiFunction<TILE, Direction> redstoneFunction) {
-//            this.redstoneFunction = redstoneFunction;
-//        }
-//
-//        public int getRedstoneLevel(TILE tile, @NotNull Direction side) {
-//            return redstoneFunction.applyAsInt(tile, side);
-//        }
-//    }
-//
-//    public record AttributeCustomResistance(float resistance) implements Attribute {
-//    }
-//
-//    public static class AttributeLight implements Attribute {
-//
-//        private final int light;
-//
-//        public AttributeLight(int light) {
-//            this.light = light;
-//        }
-//
-//        @Override
-//        public void adjustProperties(Properties props) {
-//            BlockStateHelper.applyLightLevelAdjustments(props, state -> light);
-//        }
-//    }
+    public static class AttributeRedstoneEmitter<TILE extends TileEntityMGsOddities> implements Attribute.TileAttribute<TILE> {
+
+        private final ToIntBiFunction<TILE, Direction> redstoneFunction;
+
+        public AttributeRedstoneEmitter(ToIntBiFunction<TILE, Direction> redstoneFunction) {
+            this.redstoneFunction = redstoneFunction;
+        }
+
+        public int getRedstoneLevel(TILE tile, @NotNull Direction side) {
+            return redstoneFunction.applyAsInt(tile, side);
+        }
+    }
+
+    public record AttributeCustomResistance(float resistance) implements Attribute {
+    }
+
+    public static class AttributeLight implements Attribute {
+
+        private final int light;
+
+        public AttributeLight(int light) {
+            this.light = light;
+        }
+
+        @Override
+        public void adjustProperties(Properties props) {
+            BlockStateHelper.applyLightLevelAdjustments(props, state -> light);
+        }
+    }
 }

@@ -4,10 +4,13 @@ import github.mgrlyz.mgsoddities.MGsOdditiesLang;
 import github.mgrlyz.mgsoddities.api.tier.ITier;
 import github.mgrlyz.mgsoddities.block.attribute.AttributeSideConfig;
 import github.mgrlyz.mgsoddities.block.attribute.AttributeTier;
+import github.mgrlyz.mgsoddities.config.MGsOdditiesConfig;
 import github.mgrlyz.mgsoddities.content.blocktype.BlockTypeTile;
 import github.mgrlyz.mgsoddities.registration.impl.TileEntityTypeRegistryObject;
 import github.mgrlyz.mgsoddities.tier.PipeTier;
 import github.mgrlyz.mgsoddities.tile.transmitter.TileEntityMechanicalPipe;
+import mekanism.common.config.IMekanismConfig;
+import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.blocktype.FactoryType;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.registries.MekanismSounds;
@@ -18,6 +21,7 @@ import java.util.function.Supplier;
 
 public class MGsOdditiesBlocksTypes {
     public static final BlockTypeTile<TileEntityMechanicalPipe> PARAGON_MECHANICAL_PIPE = createPipe(PipeTier.PARAGON, () -> MGsOdditiesBlocksTypes.PARAGON_MECHANICAL_PIPE);
+    public static final BlockTypeTile<TileEntityMechanicalPipe> APOTHEOSIS_MECHANICAL_PIPE = createPipe(PipeTier.PARAGON, () -> MGsOdditiesBlocksTypes.APOTHEOSIS_MECHANICAL_PIPE);
 
     // Energized Smelter
     public static final Machine.FactoryMachine<TileEntityEnergizedSmelter> ENERGIZED_SMELTER = Machine.MachineBuilder

@@ -1,7 +1,7 @@
 package github.mgrlyz.mgsoddities.registration.impl;
 
+import github.mgrlyz.mgsoddities.api.providers.IBlockProvider;
 import github.mgrlyz.mgsoddities.registration.DoubleWrappedRegistryObject;
-import mekanism.api.providers.IBlockProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;

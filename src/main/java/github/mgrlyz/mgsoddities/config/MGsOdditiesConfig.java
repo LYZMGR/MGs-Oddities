@@ -1,9 +1,6 @@
 package github.mgrlyz.mgsoddities.config;
 
 import github.mgrlyz.mgsoddities.MGsOddities;
-import mekanism.common.Mekanism;
-import mekanism.common.config.GeneralConfig;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.event.config.ModConfigEvent;
 
@@ -22,9 +19,9 @@ public class MGsOdditiesConfig {
     public static final GeneralConfig general = new GeneralConfig();
 //    public static final GearConfig gear = new GearConfig();
 //    public static final MekanismStartupConfig startup = new MekanismStartupConfig();
-//    public static final StorageConfig storage = new StorageConfig();
+    public static final StorageConfig storage = new StorageConfig();
 //    public static final TierConfig tiers = new TierConfig();
-//    public static final UsageConfig usage = new UsageConfig();
+    public static final UsageConfig usage = new UsageConfig();
 //    public static final WorldConfig world = new WorldConfig();
 //
 //    public static void registerConfigs(ModContainer modContainer) {

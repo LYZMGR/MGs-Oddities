@@ -1,8 +1,8 @@
 package github.mgrlyz.mgsoddities.content.blocktype;
 
+import github.mgrlyz.mgsoddities.api.Upgrade;
 import github.mgrlyz.mgsoddities.registration.impl.TileEntityTypeRegistryObject;
 import github.mgrlyz.mgsoddities.block.attribute.*;
-import mekanism.api.Upgrade;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.registration.impl.ContainerTypeRegistryObject;

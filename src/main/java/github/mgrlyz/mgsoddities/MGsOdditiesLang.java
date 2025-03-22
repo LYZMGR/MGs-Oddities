@@ -10,6 +10,7 @@ public enum MGsOdditiesLang implements ILangEntry {
     //Gui lang strings
     MGSODDITIES("constants","mod_name"),
     LOG_FORMAT("constants", "log_format"),
+    ERROR("constants", "error"),
     //Frequency
     FREQUENCY("frequency", "format"),
     //Factory Type

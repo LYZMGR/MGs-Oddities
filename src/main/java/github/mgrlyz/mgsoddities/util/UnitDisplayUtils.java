@@ -2,6 +2,7 @@ package github.mgrlyz.mgsoddities.util;
 
 import github.mgrlyz.mgsoddities.MGsOdditiesLang;
 import github.mgrlyz.mgsoddities.config.MGsOdditiesConfig;
+import github.mgrlyz.mgsoddities.config.value.CachedDoubleValue;
 import io.netty.buffer.ByteBuf;
 import mekanism.api.IDisableableEnum;
 import mekanism.api.IIncrementalEnum;
@@ -11,7 +12,6 @@ import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.api.text.TextComponentUtil;
-import mekanism.common.config.value.CachedDoubleValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -45,11 +45,11 @@ public class UnitDisplayUtils {
         }
     };
 
-    public static Component getDisplayShort(double value, mekanism.common.util.UnitDisplayUtils.EnergyUnit unit) {
+    public static Component getDisplayShort(double value, UnitDisplayUtils.EnergyUnit unit) {
         return getDisplayBase(value, unit, 2, true, true);
     }
 
-    public static Component getDisplay(double temp, mekanism.common.util.UnitDisplayUtils.TemperatureUnit unit, int decimalPlaces, boolean shift, boolean isShort, boolean spaceBetweenSymbol) {
+    public static Component getDisplay(double temp, UnitDisplayUtils.TemperatureUnit unit, int decimalPlaces, boolean shift, boolean isShort, boolean spaceBetweenSymbol) {
         return getDisplayBase(unit.convertFromK(temp, shift), unit, decimalPlaces, isShort, spaceBetweenSymbol);
     }
 
@@ -57,7 +57,7 @@ public class UnitDisplayUtils {
         return getDisplayBase(value, IGNORED_UNIT, decimalPlaces, true, false);
     }
 
-    private static Component getDisplayBase(double value, mekanism.common.util.UnitDisplayUtils.Unit unit, int decimalPlaces, boolean isShort, boolean spaceBetweenSymbol) {
+    private static Component getDisplayBase(double value, UnitDisplayUtils.Unit unit, int decimalPlaces, boolean isShort, boolean spaceBetweenSymbol) {
         if (value == 0) {
             return unit.appendTo(value, isShort, spaceBetweenSymbol, false);
         }
@@ -66,11 +66,11 @@ public class UnitDisplayUtils {
         if (negative) {
             value = Math.abs(value);
         }
-        for (int i = 0; i < mekanism.common.util.EnumUtils.MEASUREMENT_UNITS.length; i++) {
-            mekanism.common.util.UnitDisplayUtils.MeasurementUnit lowerMeasure = mekanism.common.util.EnumUtils.MEASUREMENT_UNITS[i];
+        for (int i = 0; i < EnumUtils.MEASUREMENT_UNITS.length; i++) {
+            UnitDisplayUtils.MeasurementUnit lowerMeasure = EnumUtils.MEASUREMENT_UNITS[i];
             if ((i == 0 && lowerMeasure.below(value)) ||
-                    i + 1 >= mekanism.common.util.EnumUtils.MEASUREMENT_UNITS.length ||
-                    (lowerMeasure.aboveEqual(value) && mekanism.common.util.EnumUtils.MEASUREMENT_UNITS[i + 1].below(value))) {
+                    i + 1 >= EnumUtils.MEASUREMENT_UNITS.length ||
+                    (lowerMeasure.aboveEqual(value) && EnumUtils.MEASUREMENT_UNITS[i + 1].below(value))) {
                 return lowerMeasure.getDisplay(value, unit, decimalPlaces, isShort, spaceBetweenSymbol, negative, singular);
             }
         }
@@ -301,7 +301,7 @@ public class UnitDisplayUtils {
 
         @Override
         public ILangEntry getLabel(boolean singular) {
-            return MekanismLang.ERROR;
+            return MGsOdditiesLang.ERROR;
         }
     }
 

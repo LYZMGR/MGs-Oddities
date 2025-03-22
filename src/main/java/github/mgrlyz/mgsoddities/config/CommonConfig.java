@@ -2,7 +2,7 @@ package github.mgrlyz.mgsoddities.config;
 
 import github.mgrlyz.mgsoddities.config.value.CachedBooleanValue;
 import github.mgrlyz.mgsoddities.config.value.CachedEnumValue;
-import mekanism.common.util.UnitDisplayUtils;
+import github.mgrlyz.mgsoddities.util.UnitDisplayUtils;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 

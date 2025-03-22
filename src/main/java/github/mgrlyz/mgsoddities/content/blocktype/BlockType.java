@@ -134,11 +134,11 @@ public class BlockType {
         }
 
         public final T externalMultiblock() {
-            return with(github.mgrlyz.mgsoddities.block.attribute.AttributeMultiblock.EXTERNAL, Attributes.AttributeMobSpawn.WHEN_NOT_FORMED, Attributes.AttributeCustomPathType.WHEN_NOT_FORMED);
+            return with(AttributeMultiblock.EXTERNAL, Attributes.AttributeMobSpawn.WHEN_NOT_FORMED, Attributes.AttributeCustomPathType.WHEN_NOT_FORMED);
         }
 
         public final T internalMultiblock() {
-            return with(github.mgrlyz.mgsoddities.block.attribute.AttributeMultiblock.INTERNAL, Attributes.AttributeMobSpawn.WHEN_NOT_FORMED, Attributes.AttributeCustomPathType.WHEN_NOT_FORMED);
+            return with(AttributeMultiblock.INTERNAL, Attributes.AttributeMobSpawn.WHEN_NOT_FORMED, Attributes.AttributeCustomPathType.WHEN_NOT_FORMED);
         }
 
         public BLOCK build() {

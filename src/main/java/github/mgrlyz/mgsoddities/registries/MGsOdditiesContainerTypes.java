@@ -1,6 +1,7 @@
 package github.mgrlyz.mgsoddities.registries;
 
 import mekanism.common.tile.factory.TileEntityFactory;
+import mekanism.common.tile.machine.TileEntityEnergizedSmelter;
 
 public class MGsOdditiesContainerTypes {
 
@@ -39,7 +40,7 @@ public class MGsOdditiesContainerTypes {
 //    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityDynamicTank>> DYNAMIC_TANK = CONTAINER_TYPES.custom(MekanismBlocks.DYNAMIC_TANK, TileEntityDynamicTank.class).armorSideBar().build();
 //    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityElectricPump>> ELECTRIC_PUMP = CONTAINER_TYPES.register(MekanismBlocks.ELECTRIC_PUMP, TileEntityElectricPump.class);
 //    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityElectrolyticSeparator>> ELECTROLYTIC_SEPARATOR = CONTAINER_TYPES.register(MekanismBlocks.ELECTROLYTIC_SEPARATOR, TileEntityElectrolyticSeparator.class);
-//    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityEnergizedSmelter>> ENERGIZED_SMELTER = CONTAINER_TYPES.register(MekanismBlocks.ENERGIZED_SMELTER, TileEntityEnergizedSmelter.class);
+    public static final ContainerTypeRegistryObject<MGsOdditiesContainer<TileEntityEnergizedSmelter>> ENERGIZED_SMELTER = CONTAINER_TYPES.register(MGsOdditiesBlocks.ENERGIZED_SMELTER, TileEntityEnergizedSmelter.class);
 //    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityEnrichmentChamber>> ENRICHMENT_CHAMBER = CONTAINER_TYPES.register(MekanismBlocks.ENRICHMENT_CHAMBER, TileEntityEnrichmentChamber.class);
 //    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityFluidicPlenisher>> FLUIDIC_PLENISHER = CONTAINER_TYPES.register(MekanismBlocks.FLUIDIC_PLENISHER, TileEntityFluidicPlenisher.class);
 //    public static final ContainerTypeRegistryObject<FormulaicAssemblicatorContainer> FORMULAIC_ASSEMBLICATOR = CONTAINER_TYPES.register(MekanismBlocks.FORMULAIC_ASSEMBLICATOR, TileEntityFormulaicAssemblicator.class, FormulaicAssemblicatorContainer::new);
