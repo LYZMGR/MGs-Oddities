@@ -3,15 +3,11 @@ package github.mgrlyz.mgsoddities.registries;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import github.mgrlyz.mgsoddities.MGsOddities;
-import mekanism.api.functions.ConstantPredicates;
-import mekanism.common.Mekanism;
-import mekanism.common.capabilities.Capabilities;
+import github.mgrlyz.mgsoddities.capabilities.Capabilities;
+import github.mgrlyz.mgsoddities.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.content.blocktype.FactoryType;
-import mekanism.common.integration.computer.ComputerCapabilityHelper;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registration.impl.TileEntityTypeDeferredRegister;
-import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
-import mekanism.common.registries.MekanismTileEntityTypes;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.base.CapabilityTileEntity;
 import mekanism.common.tile.factory.TileEntityFactory;
@@ -40,9 +36,6 @@ public class MGsOdditiesTileEntityTypes {
     private static TileEntityTypeRegistryObject<TileEntityMechanicalPipe> registerPipe(BlockRegistryObject<?, ?> block) {
         TileEntityTypeDeferredRegister.BlockEntityTypeBuilder<TileEntityMechanicalPipe> builder = transmitterBuilder(block, TileEntityMechanicalPipe::new)
                 .with(Capabilities.FLUID.block(), CapabilityTileEntity.FLUID_HANDLER_PROVIDER);
-        if (Mekanism.hooks.computerCompatEnabled()) {
-            ComputerCapabilityHelper.addComputerCapabilities(builder, ConstantPredicates.ALWAYS_TRUE);
-        }
         return builder.build();
     }
 }

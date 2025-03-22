@@ -2,7 +2,6 @@ package github.mgrlyz.mgsoddities.Item.block.transmitter;
 
 import github.mgrlyz.mgsoddities.Item.block.ItemBlockTooltip;
 import github.mgrlyz.mgsoddities.MGsOdditiesLang;
-import github.mgrlyz.mgsoddities.api.tier.ITier;
 import github.mgrlyz.mgsoddities.block.attribute.Attribute;
 import github.mgrlyz.mgsoddities.tier.PipeTier;
 import github.mgrlyz.mgsoddities.tile.transmitter.BlockLargeTransmitter;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.channels.Pipe;
 import java.util.List;
 
 public class ItemBlockMechanicalPipe extends ItemBlockTooltip<BlockLargeTransmitter<TileEntityMechanicalPipe>> {

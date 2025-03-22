@@ -1,0 +1,9 @@
+package github.mgrlyz.mgsoddities.attachments;
+
+import net.neoforged.bus.api.IEventBus;
+
+@FunctionalInterface
+public interface IAttachmentAware {
+
+    void attachAttachments(IEventBus eventBus);
+}

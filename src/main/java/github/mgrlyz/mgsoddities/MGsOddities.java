@@ -24,8 +24,8 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 public class MGsOddities {
     public static final String MODID = "mgsoddities";
     private static final Logger OGGER = LogUtils.getLogger();
-
     public static final Logger logger = LogUtils.getLogger();
+    public static final String MOD_NAME = "MGsOddities";
 
     public MGsOddities(ModContainer modContainer, IEventBus modEventBus)
     {
