@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "mgsoddities:stellar_matter_o",
+    "mgsoddities:stellar_matter_f",
+    "mgsoddities:stellar_matter_m",
+    "mgsoddities:dyson_sphere_shell",
+    "mgsoddities:dyson_sphere_frame"
+  ]
+}

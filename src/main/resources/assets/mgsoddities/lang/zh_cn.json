@@ -3,9 +3,14 @@
   "item.mgsoddities.aether_essence": "虚空精华",
   "item.mgsoddities.alloy_aether": "§b§l虚渊合金",
   "item.mgsoddities.alloy_primordial": "§6§l元极合金",
+  "item.mgsoddities.paragon_control_circuit": "§6§l辉煌控制电路",
   "item.mgsoddities.apotheosis_control_circuit": "§b§l神枢控制电路",
   "item.mgsoddities.astral_threads": "星界丝缕",
   "item.mgsoddities.dark_matter": "暗物质",
   "item.mgsoddities.nether_essence": "地狱精华",
-  "item.mgsoddities.paragon_control_circuit": "§6§l辉煌控制电路"
+  "block.mgsoddities.dyson_sphere_shell": "戴森球壳层",
+  "block.mgsoddities.dyson_sphere_frame": "戴森球框架",
+  "block.mgsoddities.stellar_matter_o": "恒星物质: §bO级",
+  "block.mgsoddities.stellar_matter_f": "恒星物质: §eF级",
+  "block.mgsoddities.stellar_matter_m": "恒星物质: §6M级"
 }

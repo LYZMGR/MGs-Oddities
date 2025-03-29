@@ -65,13 +65,15 @@ configurations {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    implementation "mekanism:Mekanism:${minecraft_version}-${mekanism_version}"
-    runtimeOnly "mekanism:Mekanism:${minecraft_version}-${mekanism_version}:additions"
-    localRuntime "curse.maven:modular-machinery-reborn-1083840:6117838"
-    localRuntime "curse.maven:experiencelib-1156551:5992832"
-    localRuntime "curse.maven:EMI-580555:6205506"
-    localRuntime "curse.maven:Forgematica-912441:6140034"
-    localRuntime "curse.maven:MaFgLib-910766:6283570"
+    implementation "mekanism:Mekanism:${mekanism_version}"
+    runtimeOnly "mekanism:Mekanism:${mekanism_version}:additions"
+    runtimeOnly "curse.maven:modular-machinery-reborn-1083840:6117838"
+    runtimeOnly "curse.maven:experiencelib-1156551:5992832"
+    runtimeOnly "curse.maven:EMI-580555:6205506"
+    runtimeOnly "curse.maven:Forgematica-912441:6140034"
+    runtimeOnly "curse.maven:MaFgLib-910766:6283570"
+    runtimeOnly "curse.maven:WorldEdit-225608:5830452"
+    runtimeOnly "curse.maven:MekanismExtras-1026040:6345776"
 }
 
 tasks.withType(ProcessResources).configureEach {

@@ -1,0 +1,16 @@
+{
+  "constants.mgsoddities.mod_name": "MG's Oddities",
+  "item.mgsoddities.aether_essence": "Aether Essence",
+  "item.mgsoddities.alloy_aether": "Aether Alloy",
+  "item.mgsoddities.alloy_primordial": "Primordial Alloy",
+  "item.mgsoddities.paragon_control_circuit": "Paragon Control Circuit",
+  "item.mgsoddities.apotheosis_control_circuit": "Apotheosis Control Circuit",
+  "item.mgsoddities.astral_threads": "Astral Threads",
+  "item.mgsoddities.dark_matter": "Dark Matter",
+  "item.mgsoddities.nether_essence": "Nether Essence",
+  "block.mgsoddities.dyson_sphere_shell": "Dyson Sphere Shell",
+  "block.mgsoddities.dyson_sphere_frame": "Dyson Sphere Frame",
+  "block.mgsoddities.stellar_matter_o": "Stellar Matter: §bO-type",
+  "block.mgsoddities.stellar_matter_f": "Stellar Matter: §eF-type",
+  "block.mgsoddities.stellar_matter_m": "Stellar Matter: §6M-type"
+}
