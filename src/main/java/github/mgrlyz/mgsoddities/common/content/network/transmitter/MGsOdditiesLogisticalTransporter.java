@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import mekanism.api.SerializationConstants;
 import mekanism.api.text.EnumColor;
 import mekanism.api.tier.ITier;
 import mekanism.common.MekanismLang;
@@ -27,8 +27,10 @@ import mekanism.common.tier.TransporterTier;
 import mekanism.common.upgrade.transmitter.LogisticalTransporterUpgradeData;
 import mekanism.common.upgrade.transmitter.TransmitterUpgradeData;
 import mekanism.common.util.EnumUtils;
+import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 import mekanism.common.util.TransporterUtils;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -38,7 +40,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,247 +47,249 @@ import org.jetbrains.annotations.Nullable;
 import java.util.PrimitiveIterator;
 
 public class MGsOdditiesLogisticalTransporter extends LogisticalTransporterBase implements IMGsOdditiesUpgradeableTransmitter<LogisticalTransporterUpgradeData> {
-    private @Nullable EnumColor color;
-
+    @Nullable
+    private EnumColor color;
     public MGsOdditiesLogisticalTransporter(Holder<Block> blockProvider, MGsOdditiesTileEntityTransmitter tile) {
-        super(tile, (TransporterTier) Attribute.getTier(blockProvider, TransporterTier.class));
+        super(tile, Attribute.getTier(blockProvider, TransporterTier.class));
     }
 
+    @Override
     public void onUpdateClient() {
-        TransporterStack stack;
-        for(ObjectIterator var1 = this.transit.values().iterator(); var1.hasNext(); stack.progress = Math.min(100, stack.progress + TPTier.getSpeed(this.tier))) {
-            stack = (TransporterStack)var1.next();
+        for (TransporterStack stack : transit.values()) {
+            stack.progress = Math.min(100, stack.progress + TPTier.getSpeed(tier));
         }
-
     }
 
-    public @Nullable EnumColor getColor() {
-        return this.color;
+    @Nullable
+    @Override
+    public EnumColor getColor() {
+        return color;
     }
 
     public void setColor(@Nullable EnumColor c) {
-        this.color = c;
+        color = c;
     }
 
+    @Override
     public InteractionResult onConfigure(Player player, Direction side) {
-        this.setColor(TransporterUtils.increment(this.getColor()));
-        PathfinderCache.onChanged(new InventoryNetwork[]{(InventoryNetwork)this.getTransmitterNetwork()});
-        this.getTransmitterTile().sendUpdatePacket();
-        EnumColor color = this.getColor();
-        player.displayClientMessage(MekanismLang.TOGGLE_COLOR.translateColored(EnumColor.GRAY, new Object[]{color == null ? MekanismLang.NONE.translateColored(EnumColor.WHITE) : color.getColoredName()}), true);
+        setColor(TransporterUtils.increment(getColor()));
+        PathfinderCache.onChanged(getTransmitterNetwork());
+        getTransmitterTile().sendUpdatePacket();
+        EnumColor color = getColor();
+        player.displayClientMessage(MekanismLang.TOGGLE_COLOR.translateColored(EnumColor.GRAY, color == null ? MekanismLang.NONE.translateColored(EnumColor.WHITE) : color.getColoredName()), true);
         return InteractionResult.SUCCESS;
     }
 
+    @Override
     public InteractionResult onRightClick(Player player, Direction side) {
-        EnumColor color = this.getColor();
-        player.displayClientMessage(MekanismLang.CURRENT_COLOR.translateColored(EnumColor.GRAY, new Object[]{color == null ? MekanismLang.NONE.translateColored(EnumColor.WHITE) : color.getColoredName()}), true);
+        EnumColor color = getColor();
+        player.displayClientMessage(MekanismLang.CURRENT_COLOR.translateColored(EnumColor.GRAY, color == null ? MekanismLang.NONE.translateColored(EnumColor.WHITE) : color.getColoredName()), true);
         return super.onRightClick(player, side);
     }
 
-    public @Nullable LogisticalTransporterUpgradeData getUpgradeData() {
-        return new LogisticalTransporterUpgradeData(this.redstoneReactive, this.getConnectionTypesRaw(), this.getColor(), this.transit, this.needsSync, this.nextId, this.delay, this.delayCount);
+    @Nullable
+    @Override
+    public LogisticalTransporterUpgradeData getUpgradeData() {
+        return new LogisticalTransporterUpgradeData(redstoneReactive, getConnectionTypesRaw(), getColor(), transit, needsSync, nextId, delay, delayCount);
     }
 
+    @Override
     public boolean dataTypeMatches(@NotNull TransmitterUpgradeData data) {
         return data instanceof LogisticalTransporterUpgradeData;
     }
 
+    @Override
     public void parseUpgradeData(@NotNull LogisticalTransporterUpgradeData data) {
-        this.redstoneReactive = data.redstoneReactive;
-        this.setConnectionTypesRaw(data.connectionTypes);
-        this.setColor(data.color);
-        this.transit.putAll(data.transit);
-        this.needsSync.putAll(data.needsSync);
-        this.nextId = data.nextId;
-        this.delay = data.delay;
-        this.delayCount = data.delayCount;
+        redstoneReactive = data.redstoneReactive;
+        setConnectionTypesRaw(data.connectionTypes);
+        setColor(data.color);
+        transit.putAll(data.transit);
+        needsSync.putAll(data.needsSync);
+        nextId = data.nextId;
+        delay = data.delay;
+        delayCount = data.delayCount;
     }
 
+    @Override
     protected void readFromNBT(HolderLookup.Provider provider, CompoundTag nbtTags) {
         super.readFromNBT(provider, nbtTags);
-        this.setColor((EnumColor) NBTUtils.getEnum(nbtTags, "color", TransporterUtils::readColor));
+        setColor(NBTUtils.getEnum(nbtTags, SerializationConstants.COLOR, TransporterUtils::readColor));
     }
 
+    @Override
     public void writeToNBT(HolderLookup.Provider provider, CompoundTag nbtTags) {
         super.writeToNBT(provider, nbtTags);
-        if (this.getColor() != null) {
-            NBTUtils.writeEnum(nbtTags, "color", this.getColor());
+        if (getColor() != null) {
+            NBTUtils.writeEnum(nbtTags, SerializationConstants.COLOR, getColor());
         }
-
     }
 
-    public @NotNull CompoundTag getReducedUpdateTag(@NotNull HolderLookup.@NotNull Provider provider, CompoundTag updateTag) {
+    @NotNull
+    @Override
+    public CompoundTag getReducedUpdateTag(@NotNull HolderLookup.Provider provider, CompoundTag updateTag) {
         updateTag = super.getReducedUpdateTag(provider, updateTag);
-        if (this.getColor() != null) {
-            NBTUtils.writeEnum(updateTag, "color", this.getColor());
+        if (getColor() != null) {
+            NBTUtils.writeEnum(updateTag, SerializationConstants.COLOR, getColor());
         }
-
         return updateTag;
     }
 
-    public boolean handleUpdateTag(@NotNull CompoundTag tag, @NotNull HolderLookup.@NotNull Provider provider) {
+    @Override
+    public boolean handleUpdateTag(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         boolean refreshModelData = super.handleUpdateTag(tag, provider);
-        EnumColor color = (EnumColor)NBTUtils.getEnum(tag, "color", EnumColor.BY_ID);
+        EnumColor color = NBTUtils.getEnum(tag, SerializationConstants.COLOR, EnumColor.BY_ID);
         if (this.color != color) {
-            this.setColor(color);
+            setColor(color);
             refreshModelData = true;
         }
-
         return refreshModelData;
     }
 
+    @Override
     public ITier getTier() {
-        return this.tier;
+        return tier;
     }
 
+    @Override
     public void onUpdateServer() {
-        if (this.getTransmitterNetwork() != null) {
-            if (this.delay > 0) {
-                --this.delay;
+        if (getTransmitterNetwork() != null) {
+            if (delay > 0) {
+                delay--;
             } else {
-                this.delay = 3;
+                delay = 3;
                 BlockPos.MutableBlockPos inventoryPos = new BlockPos.MutableBlockPos();
-                BlockPos pos = this.getBlockPos();
-
-                for(Direction side : EnumUtils.DIRECTIONS) {
-                    if (this.isConnectionType(side, ConnectionType.PULL)) {
-                        inventoryPos.setWithOffset(pos, side);
-                        IItemHandler inventory = (IItemHandler) Capabilities.ITEM.getCapabilityIfLoaded(this.getLevel(), inventoryPos, side.getOpposite());
-                        if (inventory != null) {
-                            TransitRequest request = TransitRequest.anyItem(inventory, TPTier.getPullAmount(this.tier));
-                            if (!request.isEmpty()) {
-                                TransitRequest.TransitResponse response = this.insert((BlockEntity)null, inventoryPos, request, this.getColor(), true, 0);
-                                if (response.isEmpty()) {
-                                    ++this.delayCount;
-                                    this.delay = Math.min(40, (int)Math.exp((double)this.delayCount));
-                                } else {
-                                    response.useAll();
-                                    this.delay = 10;
-                                }
+                BlockPos pos = getBlockPos();
+                for (Direction side : EnumUtils.DIRECTIONS) {
+                    if (!isConnectionType(side, ConnectionType.PULL)) {
+                        continue;
+                    }
+                    inventoryPos.setWithOffset(pos, side);
+                    IItemHandler inventory = Capabilities.ITEM.getCapabilityIfLoaded(getLevel(), inventoryPos, side.getOpposite());
+                    if (inventory != null) {
+                        TransitRequest request = TransitRequest.anyItem(inventory, TPTier.getPullAmount(tier));
+                        if (!request.isEmpty()) {
+                            TransitRequest.TransitResponse response = insert(null, inventoryPos, request, getColor(), true, 0);
+                            if (response.isEmpty()) {
+                                delayCount++;
+                                delay = Math.min(2 * SharedConstants.TICKS_PER_SECOND, (int) Math.exp(delayCount));
+                            } else {
+                                response.useAll();
+                                delay = MekanismUtils.TICKS_PER_HALF_SECOND;
                             }
                         }
                     }
                 }
             }
-
-            if (!this.transit.isEmpty()) {
-                long pos = this.getWorldPositionLong();
-                InventoryNetwork network = (InventoryNetwork)this.getTransmitterNetwork();
+            if (!transit.isEmpty()) {
+                long pos = getWorldPositionLong();
+                InventoryNetwork network = getTransmitterNetwork();
                 IntSet deletes = new IntOpenHashSet();
-                ObjectIterator var23 = this.transit.int2ObjectEntrySet().iterator();
-
-                while(var23.hasNext()) {
-                    Int2ObjectMap.Entry<TransporterStack> entry = (Int2ObjectMap.Entry)var23.next();
+                for (Int2ObjectMap.Entry<TransporterStack> entry : transit.int2ObjectEntrySet()) {
                     int stackId = entry.getIntKey();
-                    TransporterStack stack = (TransporterStack)entry.getValue();
-                    if (stack.initiatedPath || !stack.itemStack.isEmpty() && this.recalculate(stackId, stack, Long.MAX_VALUE)) {
-                        int prevProgress = stack.progress;
-                        stack.progress += TPTier.getSpeed(this.tier);
-                        if (stack.progress >= 100) {
-                            long prevSet = Long.MAX_VALUE;
-                            if (stack.hasPath()) {
-                                int currentIndex = stack.getPath().indexOf(pos);
-                                if (currentIndex == 0) {
-                                    deletes.add(stackId);
-                                    continue;
-                                }
+                    TransporterStack stack = entry.getValue();
+                    if (!stack.initiatedPath) {
+                        if (stack.itemStack.isEmpty() || !recalculate(stackId, stack, Long.MAX_VALUE)) {
+                            deletes.add(stackId);
+                            continue;
+                        }
+                    }
 
-                                long next = stack.getPath().getLong(currentIndex - 1);
-                                if (next != Long.MAX_VALUE) {
-                                    BlockPos nextPos = BlockPos.of(next);
-                                    if (!stack.isFinal(this)) {
-                                        LogisticalTransporterBase transmitter = (LogisticalTransporterBase)network.getTransmitter(next);
-                                        if (stack.canInsertToTransporter(transmitter, stack.getSide(this), this)) {
-                                            if (transmitter instanceof IMixinLogisticalTransporterBase) {
-                                                IMixinLogisticalTransporterBase mixTransmitter = (IMixinLogisticalTransporterBase)transmitter;
-                                                mixTransmitter.mekanismMGsOddities$getEntity(stack, stack.progress % 100);
-                                            }
-
+                    int prevProgress = stack.progress;
+                    stack.progress += TPTier.getSpeed(tier);
+                    if (stack.progress >= 100) {
+                        long prevSet = Long.MAX_VALUE;
+                        if (stack.hasPath()) {
+                            int currentIndex = stack.getPath().indexOf(pos);
+                            if (currentIndex == 0) {
+                                deletes.add(stackId);
+                                continue;
+                            }
+                            long next = stack.getPath().getLong(currentIndex - 1);
+                            if (next != Long.MAX_VALUE) {
+                                BlockPos nextPos = BlockPos.of(next);
+                                if (!stack.isFinal(this)) {
+                                    LogisticalTransporterBase transmitter = network.getTransmitter(next);
+                                    if (stack.canInsertToTransporter(transmitter, stack.getSide(this), this)) {
+                                        if (transmitter instanceof IMixinLogisticalTransporterBase mixTransmitter) {
+                                            mixTransmitter.mekanismMGsOddities$getEntity(stack, stack.progress % 100);
+                                        }
+                                        deletes.add(stackId);
+                                        continue;
+                                    }
+                                    prevSet = next;
+                                } else if (stack.getPathType().hasTarget()) {
+                                    Direction side = stack.getSide(this).getOpposite();
+                                    IItemHandler acceptor = network.getCachedAcceptor(next, side);
+                                    if (acceptor == null && stack.getPathType().isHome()) {
+                                        acceptor = Capabilities.ITEM.getCapabilityIfLoaded(getLevel(), nextPos, side);
+                                    }
+                                    TransitRequest.TransitResponse response = TransitRequest.simple(stack.itemStack).addToInventory(getLevel(), nextPos, acceptor, 0,
+                                            stack.getPathType().isHome());
+                                    if (!response.isEmpty()) {
+                                        ItemStack rejected = response.getRejected();
+                                        if (rejected.isEmpty()) {
+                                            TransporterManager.remove(getLevel(), stack);
                                             deletes.add(stackId);
                                             continue;
                                         }
-
-                                        prevSet = next;
-                                    } else if (stack.getPathType().hasTarget()) {
-                                        Direction side = stack.getSide(this).getOpposite();
-                                        IItemHandler acceptor = (IItemHandler)network.getCachedAcceptor(next, side);
-                                        if (acceptor == null && stack.getPathType().isHome()) {
-                                            acceptor = (IItemHandler)Capabilities.ITEM.getCapabilityIfLoaded(this.getLevel(), nextPos, side);
-                                        }
-
-                                        TransitRequest.TransitResponse response = TransitRequest.simple(stack.itemStack).addToInventory(this.getLevel(), nextPos, acceptor, 0, stack.getPathType().isHome());
-                                        if (!response.isEmpty()) {
-                                            ItemStack rejected = response.getRejected();
-                                            if (rejected.isEmpty()) {
-                                                TransporterManager.remove(this.getLevel(), stack);
-                                                deletes.add(stackId);
-                                                continue;
-                                            }
-
-                                            stack.itemStack = rejected;
-                                        }
-
-                                        prevSet = next;
+                                        stack.itemStack = rejected;
                                     }
+                                    prevSet = next;
                                 }
-                            }
-
-                            if (!this.recalculate(stackId, stack, prevSet)) {
-                                deletes.add(stackId);
-                            } else if (prevSet == Long.MAX_VALUE) {
-                                stack.progress = 50;
-                            } else {
-                                stack.progress = 0;
-                            }
-                        } else if (prevProgress < 50 && stack.progress >= 50) {
-                            boolean tryRecalculate;
-                            if (stack.isFinal(this)) {
-                                TransporterStack.Path pathType = stack.getPathType();
-                                if (pathType.hasTarget()) {
-                                    Direction side = stack.getSide(this);
-                                    ConnectionType connectionType = this.getConnectionType(side);
-                                    tryRecalculate = !connectionType.canSendTo() || !TransporterUtils.canInsert(this.getLevel(), BlockPos.of(stack.getDest()), stack.color, stack.itemStack, side, pathType.isHome());
-                                } else {
-                                    tryRecalculate = true;
-                                }
-                            } else {
-                                long nextPos = stack.getNext(this);
-                                if (nextPos == Long.MAX_VALUE) {
-                                    tryRecalculate = true;
-                                } else {
-                                    Direction nextSide = stack.getSide(this.getWorldPositionLong(), nextPos);
-                                    LogisticalTransporterBase nextTransmitter = (LogisticalTransporterBase)network.getTransmitter(nextPos);
-                                    if (nextTransmitter == null && stack.getPathType().noTarget() && stack.getPath().size() == 2) {
-                                        tryRecalculate = !this.getConnectionType(nextSide).canSendTo();
-                                    } else {
-                                        tryRecalculate = !stack.canInsertToTransporter(nextTransmitter, nextSide, this);
-                                    }
-                                }
-                            }
-
-                            if (tryRecalculate && !this.recalculate(stackId, stack, Long.MAX_VALUE)) {
-                                deletes.add(stackId);
                             }
                         }
-                    } else {
-                        deletes.add(stackId);
+                        if (!recalculate(stackId, stack, prevSet)) {
+                            deletes.add(stackId);
+                        } else if (prevSet == Long.MAX_VALUE) {
+                            stack.progress = 50;
+                        } else {
+                            stack.progress = 0;
+                        }
+                    } else if (prevProgress < 50 && stack.progress >= 50) {
+                        boolean tryRecalculate;
+                        if (stack.isFinal(this)) {
+                            TransporterStack.Path pathType = stack.getPathType();
+                            if (pathType.hasTarget()) {
+                                Direction side = stack.getSide(this);
+                                ConnectionType connectionType = getConnectionType(side);
+                                tryRecalculate = !connectionType.canSendTo() ||
+                                        !TransporterUtils.canInsert(getLevel(), BlockPos.of(stack.getDest()), stack.color, stack.itemStack, side, pathType.isHome());
+                            } else {
+                                tryRecalculate = true;
+                            }
+                        } else {
+                            long nextPos = stack.getNext(this);
+                            if (nextPos == Long.MAX_VALUE) {
+                                tryRecalculate = true;
+                            } else {
+                                Direction nextSide = stack.getSide(getWorldPositionLong(), nextPos);
+                                LogisticalTransporterBase nextTransmitter = network.getTransmitter(nextPos);
+                                if (nextTransmitter == null && stack.getPathType().noTarget() && stack.getPath().size() == 2) {
+                                    tryRecalculate = !getConnectionType(nextSide).canSendTo();
+                                } else {
+                                    tryRecalculate = !stack.canInsertToTransporter(nextTransmitter, nextSide, this);
+                                }
+                            }
+                        }
+                        if (tryRecalculate && !recalculate(stackId, stack, Long.MAX_VALUE)) {
+                            deletes.add(stackId);
+                        }
                     }
                 }
 
-                if (!deletes.isEmpty() || !this.needsSync.isEmpty()) {
-                    PacketUtils.sendToAllTracking(PacketTransporterBatch.create(pos, deletes, new Int2ObjectOpenHashMap(this.needsSync)), this.getTransmitterTile());
+                if (!deletes.isEmpty() || !needsSync.isEmpty()) {
+                    PacketUtils.sendToAllTracking(PacketTransporterBatch.create(pos, deletes, new Int2ObjectOpenHashMap<>(needsSync)), getTransmitterTile());
                     PrimitiveIterator.OfInt ofInt = deletes.iterator();
-
-                    while(ofInt.hasNext()) {
-                        this.deleteStack(ofInt.nextInt());
+                    while (ofInt.hasNext()) {
+                        deleteStack(ofInt.nextInt());
                     }
 
-                    this.needsSync.clear();
-                    this.getTransmitterTile().markForSave();
+                    needsSync.clear();
+
+                    getTransmitterTile().markForSave();
                 }
             }
         }
-
     }
 
     private boolean recalculate(int stackId, TransporterStack stack, long from) {
@@ -294,13 +297,12 @@ public class MGsOdditiesLogisticalTransporter extends LogisticalTransporterBase 
         if (noPath && !stack.calculateIdle(this)) {
             TransporterUtils.drop(this, stack);
             return false;
-        } else {
-            this.needsSync.put(stackId, stack);
-            if (from != Long.MAX_VALUE) {
-                stack.originalLocation = from;
-            }
-
-            return true;
         }
+
+        needsSync.put(stackId, stack);
+        if (from != Long.MAX_VALUE) {
+            stack.originalLocation = from;
+        }
+        return true;
     }
 }

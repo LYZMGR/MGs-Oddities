@@ -15,41 +15,45 @@ public enum ECtier implements IAdvanceTier, StringRepresentable {
     PARAGON(AdvanceTier.PARAGON, 1024000000L, 1024000L),
     APOTHEOSIS(AdvanceTier.APOTHEOSIS, 4096000000L, 4096000L);
 
-
     private final long advanceMaxEnergy;
     private final long advanceOutput;
     private final AdvanceTier advanceTier;
-    private @Nullable CachedLongValue storageReference;
-    private @Nullable CachedLongValue outputReference;
+    @Nullable
+    private CachedLongValue storageReference;
+    @Nullable
+    private CachedLongValue outputReference;
 
-    private ECtier(AdvanceTier tier, long max, long out) {
-        this.advanceMaxEnergy = max;
-        this.advanceOutput = out;
-        this.advanceTier = tier;
+    ECtier(AdvanceTier tier, long max, long out) {
+        advanceMaxEnergy = max;
+        advanceOutput = out;
+        advanceTier = tier;
     }
 
+    @Override
     public AdvanceTier getAdvanceTier() {
-        return this.advanceTier;
+        return advanceTier;
     }
 
-    public @NotNull String getSerializedName() {
-        return this.name().toLowerCase(Locale.ROOT);
+    @Override
+    @NotNull
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public long getMaxEnergy() {
-        return this.storageReference == null ? this.getAdvanceMaxEnergy() : this.storageReference.getOrDefault();
+        return storageReference == null ? getAdvanceMaxEnergy() : storageReference.getOrDefault();
     }
 
     public long getOutput() {
-        return this.outputReference == null ? this.getAdvanceOutput() : this.outputReference.getOrDefault();
+        return outputReference == null ? getAdvanceOutput() : outputReference.getOrDefault();
     }
 
     public long getAdvanceMaxEnergy() {
-        return this.advanceMaxEnergy;
+        return advanceMaxEnergy;
     }
 
     public long getAdvanceOutput() {
-        return this.advanceOutput;
+        return advanceOutput;
     }
 
     public void setConfigReference(CachedLongValue storageReference, CachedLongValue outputReference) {

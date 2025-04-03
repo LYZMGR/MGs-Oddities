@@ -3,7 +3,7 @@ package github.mgrlyz.mgsoddities.common.tile.transmitter;
 import github.mgrlyz.mgsoddities.api.tier.AdvanceTier;
 import github.mgrlyz.mgsoddities.common.content.network.transmitter.MGsOdditiesMechanicalPipe;
 import github.mgrlyz.mgsoddities.common.registries.block.MGsOdditiesBlocks;
-import mekanism.api.IContentsListener;
+import mekanism.api.SerializationConstants;
 import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.common.block.states.BlockStateHelper;
 import mekanism.common.block.states.TransmitterType;
@@ -14,7 +14,6 @@ import mekanism.common.content.network.FluidNetwork;
 import mekanism.common.integration.computer.IComputerTile;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.lib.transmitter.ConnectionType;
-import mekanism.common.registration.impl.BlockRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -31,100 +30,106 @@ import java.util.List;
 
 public class MGsOdditiesTileEntityMechanicalPipe extends MGsOdditiesTileEntityTransmitter implements IComputerTile {
     private final FluidHandlerManager fluidHandlerManager;
-
     public MGsOdditiesTileEntityMechanicalPipe(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
-        this.addCapabilityResolver(this.fluidHandlerManager = new FluidHandlerManager((direction) -> {
-            MGsOdditiesMechanicalPipe pipe = this.getTransmitter();
-            return (direction == null || pipe.getConnectionTypeRaw(direction) != ConnectionType.NONE) && !pipe.isRedstoneActivated() ? pipe.getFluidTanks(direction) : Collections.emptyList();
-        }, new DynamicFluidHandler(this::getFluidTanks, this.getExtractPredicate(), this.getInsertPredicate(), (IContentsListener)null)));
+        addCapabilityResolver(fluidHandlerManager = new FluidHandlerManager(direction -> {
+            MGsOdditiesMechanicalPipe pipe = getTransmitter();
+            if (direction != null && (pipe.getConnectionTypeRaw(direction) == ConnectionType.NONE) || pipe.isRedstoneActivated()) {
+                return Collections.emptyList();
+            }
+            return pipe.getFluidTanks(direction);
+        }, new DynamicFluidHandler(this::getFluidTanks, getExtractPredicate(), getInsertPredicate(), null)));
     }
 
+    @Override
     protected MGsOdditiesMechanicalPipe createTransmitter(Holder<Block> blockProvider) {
         return new MGsOdditiesMechanicalPipe(blockProvider, this);
     }
 
+    @Override
     public MGsOdditiesMechanicalPipe getTransmitter() {
-        return (MGsOdditiesMechanicalPipe)super.getTransmitter();
+        return (MGsOdditiesMechanicalPipe) super.getTransmitter();
     }
 
+    @Override
     protected void onUpdateServer() {
-        this.getTransmitter().pullFromAcceptors();
+        getTransmitter().pullFromAcceptors();
         super.onUpdateServer();
     }
 
+    @Override
     public TransmitterType getTransmitterType() {
         return TransmitterType.MECHANICAL_PIPE;
     }
 
-    protected @NotNull BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
-        BlockRegistryObject var10001;
-        switch (tier) {
-            case PARAGON -> var10001 = MGsOdditiesBlocks.PARAGON_UNIVERSAL_CABLE;
-            case APOTHEOSIS -> var10001 = MGsOdditiesBlocks.APOTHEOSIS_UNIVERSAL_CABLE;
-            default -> throw new MatchException((String)null, (Throwable)null);
-        }
-
-        return BlockStateHelper.copyStateData(current, var10001);
+    @NotNull
+    @Override
+    protected BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
+        return BlockStateHelper.copyStateData(current, switch (tier) {
+            case PARAGON -> MGsOdditiesBlocks.PARAGON_LOGISTICAL_TRANSPORTER;
+            case APOTHEOSIS -> MGsOdditiesBlocks.APOTHEOSIS_MECHANICAL_PIPE;
+        });
     }
 
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider) {
+    @NotNull
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider) {
         CompoundTag updateTag = super.getUpdateTag(provider);
-        if (this.getTransmitter().hasTransmitterNetwork()) {
-            FluidNetwork network = (FluidNetwork)this.getTransmitter().getTransmitterNetwork();
-            updateTag.put("fluid", network.lastFluid.saveOptional(provider));
-            updateTag.putFloat("scale", network.currentScale);
+        if (getTransmitter().hasTransmitterNetwork()) {
+            FluidNetwork network = getTransmitter().getTransmitterNetwork();
+            updateTag.put(SerializationConstants.FLUID, network.lastFluid.saveOptional(provider));
+            updateTag.putFloat(SerializationConstants.SCALE, network.currentScale);
         }
-
         return updateTag;
     }
 
     private List<IExtendedFluidTank> getFluidTanks(@Nullable Direction side) {
-        return this.fluidHandlerManager.getContainers(side);
+        return fluidHandlerManager.getContainers(side);
     }
 
+    @Override
     public void sideChanged(@NotNull Direction side, @NotNull ConnectionType old, @NotNull ConnectionType type) {
         super.sideChanged(side, old, type);
         if (type == ConnectionType.NONE) {
-            this.invalidateCapability(Capabilities.FLUID.block(), side);
+            invalidateCapability(Capabilities.FLUID.block(), side);
         } else if (old == ConnectionType.NONE) {
-            this.invalidateCapabilities();
+            invalidateCapabilities();
         }
-
     }
 
+    @Override
     public void redstoneChanged(boolean powered) {
         super.redstoneChanged(powered);
         if (powered) {
-            this.invalidateCapabilityAll(Capabilities.FLUID.block());
+            invalidateCapabilityAll(Capabilities.FLUID.block());
         } else {
-            this.invalidateCapabilities();
+            invalidateCapabilities();
         }
-
     }
 
+    @Override
     public String getComputerName() {
-        return this.getTransmitter().getTier().getBaseTier().getLowerName() + "MechanicalPipe";
+        return getTransmitter().getTier().getBaseTier().getLowerName() + "MechanicalPipe";
     }
 
     @ComputerMethod
     FluidStack getBuffer() {
-        return this.getTransmitter().getBufferWithFallback();
+        return getTransmitter().getBufferWithFallback();
     }
 
     @ComputerMethod
     long getCapacity() {
-        MGsOdditiesMechanicalPipe pipe = this.getTransmitter();
-        return pipe.hasTransmitterNetwork() ? ((FluidNetwork)pipe.getTransmitterNetwork()).getCapacity() : pipe.getCapacity();
+        MGsOdditiesMechanicalPipe pipe = getTransmitter();
+        return pipe.hasTransmitterNetwork() ? pipe.getTransmitterNetwork().getCapacity() : pipe.getCapacity();
     }
 
     @ComputerMethod
     long getNeeded() {
-        return this.getCapacity() - (long)this.getBuffer().getAmount();
+        return getCapacity() - getBuffer().getAmount();
     }
 
     @ComputerMethod
     double getFilledPercentage() {
-        return (double)this.getBuffer().getAmount() / (double)this.getCapacity();
+        return getBuffer().getAmount() / (double) getCapacity();
     }
 }

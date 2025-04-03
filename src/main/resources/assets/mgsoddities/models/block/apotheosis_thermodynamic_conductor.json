@@ -1,0 +1,9 @@
+{
+  "parent": "mekanism:block/transmitter/small/small",
+  "textures": {
+    "side": "mgsoddities:block/multipart/apotheosis/apotheosis_thermodynamic_conductor_vertical",
+    "center_down": "mgsoddities:block/multipart/apotheosis/apotheosis_thermodynamic_conductor",
+    "side_opaque": "mgsoddities:block/multipart/opaque/apotheosis/apotheosis_thermodynamic_conductor_vertical",
+    "center_opaque": "mgsoddities:block/multipart/apotheosis/apotheosis_thermodynamic_conductor"
+  }
+}

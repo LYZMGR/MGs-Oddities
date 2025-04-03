@@ -7,18 +7,18 @@ import org.jetbrains.annotations.NotNull;
 
 public enum MGsOdditiesLang implements ILangEntry {
     MGSODDITIES("constants", "mod_name");
-
     private final String key;
 
-    private MGsOdditiesLang(String type, String path) {
+    MGsOdditiesLang(String type, String path) {
         this(Util.makeDescriptionId(type, MGsOddities.rl(path)));
     }
 
-    private MGsOdditiesLang(String key) {
+    MGsOdditiesLang(String key) {
         this.key = key;
     }
 
+    @Override
     public @NotNull String getTranslationKey() {
-        return this.key;
+        return key;
     }
 }

@@ -10,7 +10,6 @@ import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.tier.PipeTier;
 import mekanism.common.util.text.TextUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
@@ -20,24 +19,29 @@ import java.util.List;
 import java.util.Objects;
 
 public class MGsOdditiesItemBlockMechanicalPipe extends ItemBlockTooltip<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>> {
-    public MGsOdditiesItemBlockMechanicalPipe(BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe> block, Item.Properties properties) {
+
+    public MGsOdditiesItemBlockMechanicalPipe(BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe> block, Properties properties) {
         super(block, true, properties);
     }
 
-    public @NotNull PipeTier getTier() {
-        return (PipeTier) Objects.requireNonNull((PipeTier) Attribute.getTier(this.getBlock(), PipeTier.class));
+    @NotNull
+    @Override
+    public PipeTier getTier() {
+        return Objects.requireNonNull(Attribute.getTier(getBlock(), PipeTier.class));
     }
 
-    protected void addDetails(@NotNull ItemStack stack, @Nullable Item.@Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    @Override
+    protected void addDetails(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.addDetails(stack, context, tooltip, flag);
         tooltip.add(MekanismLang.CAPABLE_OF_TRANSFERRING.translateColored(EnumColor.DARK_GRAY));
-        tooltip.add(MekanismLang.FLUIDS.translateColored(EnumColor.PURPLE, new Object[]{EnumColor.GRAY, MekanismLang.FORGE}));
+        tooltip.add(MekanismLang.FLUIDS.translateColored(EnumColor.PURPLE, EnumColor.GRAY, MekanismLang.FORGE));
     }
 
-    protected void addStats(@NotNull ItemStack stack, @Nullable Item.@Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    @Override
+    protected void addStats(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.addStats(stack, context, tooltip, flag);
-        PipeTier tier = this.getTier();
-        tooltip.add(MekanismLang.CAPACITY_MB_PER_TICK.translateColored(EnumColor.INDIGO, new Object[]{EnumColor.GRAY, TextUtils.format(PTier.getPipeCapacity(tier))}));
-        tooltip.add(MekanismLang.PUMP_RATE_MB.translateColored(EnumColor.INDIGO, new Object[]{EnumColor.GRAY, TextUtils.format((long)PTier.getPipePullAmount(tier))}));
+        PipeTier tier = getTier();
+        tooltip.add(MekanismLang.CAPACITY_MB_PER_TICK.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(PTier.getPipeCapacity(tier))));
+        tooltip.add(MekanismLang.PUMP_RATE_MB.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(PTier.getPipePullAmount(tier))));
     }
 }

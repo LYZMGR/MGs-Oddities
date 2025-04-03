@@ -6,5 +6,5 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public interface IMGsOdditiesAlloyInteraction {
-    <TIER extends IAdvanceTier> void onMGsOdditiesAlloyInteraction(Player var1, ItemStack var2, @NotNull TIER var3);
+    <TIER extends IAdvanceTier> void onMGsOdditiesAlloyInteraction(Player player, ItemStack stack, @NotNull TIER tier);
 }

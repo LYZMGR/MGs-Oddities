@@ -6,16 +6,15 @@ import mekanism.common.tier.TubeTier;
 public class TTier {
     public static long getTubePullAmount(TubeTier tier) {
         return switch (tier) {
-            case BASIC, ADVANCED, ELITE -> MGsOdditiesConfig.mgsodditiesTierConfig.paragonPressurizedTubePullAmount.get();
-            case ULTIMATE -> MGsOdditiesConfig.mgsodditiesTierConfig.apotheosisPressurizedTubePullAmount.get();
+            case BASIC, ADVANCED, ULTIMATE -> MGsOdditiesConfig.mgsodditiesTierConfig.paragonPressurizedTubePullAmount.get();
+            case ELITE -> MGsOdditiesConfig.mgsodditiesTierConfig.apotheosisPressurizedTubePullAmount.get();
         };
     }
 
     public static long getTubeCapacity(TubeTier tier) {
-        long var10000;
         return switch (tier) {
-            case BASIC, ADVANCED, ELITE -> MGsOdditiesConfig.mgsodditiesTierConfig.paragonPressurizedTubeCapacity.get();
-            case ULTIMATE -> MGsOdditiesConfig.mgsodditiesTierConfig.apotheosisPressurizedTubeCapacity.get();
+            case BASIC, ADVANCED, ULTIMATE -> MGsOdditiesConfig.mgsodditiesTierConfig.paragonPressurizedTubeCapacity.get();
+            case ELITE -> MGsOdditiesConfig.mgsodditiesTierConfig.apotheosisPressurizedTubeCapacity.get();
         };
     }
 }

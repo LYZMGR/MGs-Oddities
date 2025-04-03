@@ -1,13 +1,9 @@
 package github.mgrlyz.mgsoddities.common.config;
 
-import github.mgrlyz.mgsoddities.common.tier.ECtier;
-import github.mgrlyz.mgsoddities.common.util.MGsOdditiesEnumUtils;
 import mekanism.common.config.BaseMekanismConfig;
 import mekanism.common.config.value.CachedLongValue;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
-import java.util.Locale;
 
 public class MGsOdditiesTierConfig extends BaseMekanismConfig {
     private final ModConfigSpec configSpec;
@@ -35,7 +31,6 @@ public class MGsOdditiesTierConfig extends BaseMekanismConfig {
     public MGsOdditiesTierConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         builder.comment("Tier Config. This config is synced from server to client.").push("tier");
-        this.addStoragesCategory(builder);
         builder.comment("Transmitters").push("transmitters");
         builder.comment("Universal Cables").push("energy");
         this.paragonUniversalCableCapacity = CachedLongValue.define(this, builder, MGsOdditiesConfigTranslations.PARAGON_UNIVERSAL_CABLE_CAPACITY,"paragonUniversalCable",65_536_000L, 1L,Long.MAX_VALUE);
@@ -72,37 +67,22 @@ public class MGsOdditiesTierConfig extends BaseMekanismConfig {
         this.configSpec = builder.build();
     }
 
-    private void addStoragesCategory(ModConfigSpec.Builder builder) {
-        builder.comment("Storages").push("Storages");
-        this.addEnergyCubeCategory(builder);
-        builder.pop();
-    }
-
-    private void addEnergyCubeCategory(ModConfigSpec.Builder builder) {
-        builder.comment("Energy Cubes").push("energy_cubes");
-
-        for(ECtier tier : MGsOdditiesEnumUtils.ENERGY_CUBE_TIERS) {
-            String tierName = tier.getAdvanceTier().getSimpleName();
-            CachedLongValue storageReference = CachedLongValue.wrap(this, builder.comment("Maximum number of Joules " + tierName + " energy cubes can store.").defineInRange(tierName.toLowerCase(Locale.ROOT) + "Storage", tier.getAdvanceMaxEnergy(), 1L, Long.MAX_VALUE));
-            CachedLongValue outputReference = CachedLongValue.wrap(this, builder.comment("Output rate in Joules of " + tierName + " energy cubes.").defineInRange(tierName.toLowerCase(Locale.ROOT) + "Output", tier.getAdvanceOutput(), 1L, Long.MAX_VALUE));
-            tier.setConfigReference(storageReference, outputReference);
-        }
-
-        builder.pop();
-    }
-    
+    @Override
     public String getFileName() {
         return "TierConfig";
     }
 
+    @Override
     public String getTranslation() {
         return null;
     }
 
+    @Override
     public ModConfigSpec getConfigSpec() {
-        return this.configSpec;
+        return configSpec;
     }
 
+    @Override
     public ModConfig.Type getConfigType() {
         return ModConfig.Type.SERVER;
     }

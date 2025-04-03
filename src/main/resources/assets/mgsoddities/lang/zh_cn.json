@@ -12,5 +12,15 @@
   "block.mgsoddities.dyson_sphere_frame": "戴森球框架",
   "block.mgsoddities.stellar_matter_o": "恒星物质: §bO级",
   "block.mgsoddities.stellar_matter_f": "恒星物质: §eF级",
-  "block.mgsoddities.stellar_matter_m": "恒星物质: §6M级"
+  "block.mgsoddities.stellar_matter_m": "恒星物质: §6M级",
+  "block.mgsoddities.paragon_universal_cable": "§6辉煌通用线缆",
+  "block.mgsoddities.apotheosis_universal_cable": "§b神枢通用线缆",
+  "block.mgsoddities.paragon_mechanical_pipe": "§6辉煌机械管道",
+  "block.mgsoddities.apotheosis_mechanical_pipe": "§b神枢机械管道",
+  "block.mgsoddities.paragon_pressurized_tube": "§6辉煌加压管道",
+  "block.mgsoddities.apotheosis_pressurized_tube": "§b神枢加压管道",
+  "block.mgsoddities.paragon_logistical_transporter": "§6辉煌物流管道",
+  "block.mgsoddities.apotheosis_logistical_transporter": "§b神枢物流管道",
+  "block.mgsoddities.paragon_thermodynamic_conductor": "§6辉煌热导线缆",
+  "block.mgsoddities.apotheosis_thermodynamic_conductor": "§b神枢热导线缆"
 }

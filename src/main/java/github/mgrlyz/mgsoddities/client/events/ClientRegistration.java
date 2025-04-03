@@ -33,16 +33,11 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
                //Transmitters
-        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderLogisticalTransporter::new, MGsOdditiesTileEntityTypes.PARAGON_LOGISTICAL_TRANSPORTER,
-                MGsOdditiesTileEntityTypes.APOTHEOSIS_LOGISTICAL_TRANSPORTER);
-        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderMechanicalPipe::new, MGsOdditiesTileEntityTypes.PARAGON_MECHANICAL_PIPE,
-                MGsOdditiesTileEntityTypes.APOTHEOSIS_MECHANICAL_PIPE);
-        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderPressurizedTube::new, MGsOdditiesTileEntityTypes.PARAGON_PRESSURIZED_TUBE,
-                MGsOdditiesTileEntityTypes.APOTHEOSIS_PRESSURIZED_TUBE);
-        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderUniversalCable::new, MGsOdditiesTileEntityTypes.PARAGON_UNIVERSAL_CABLE,
-                MGsOdditiesTileEntityTypes.APOTHEOSIS_UNIVERSAL_CABLE);
-        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderThermodynamicConductor::new, MGsOdditiesTileEntityTypes.PARAGON_THERMODYNAMIC_CONDUCTOR,
-                MGsOdditiesTileEntityTypes.APOTHEOSIS_THERMODYNAMIC_CONDUCTOR);
+        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderLogisticalTransporter::new, MGsOdditiesTileEntityTypes.PARAGON_LOGISTICAL_TRANSPORTER, MGsOdditiesTileEntityTypes.APOTHEOSIS_LOGISTICAL_TRANSPORTER);
+        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderMechanicalPipe::new, MGsOdditiesTileEntityTypes.PARAGON_MECHANICAL_PIPE, MGsOdditiesTileEntityTypes.APOTHEOSIS_MECHANICAL_PIPE);
+        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderPressurizedTube::new, MGsOdditiesTileEntityTypes.PARAGON_PRESSURIZED_TUBE, MGsOdditiesTileEntityTypes.APOTHEOSIS_PRESSURIZED_TUBE);
+        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderUniversalCable::new, MGsOdditiesTileEntityTypes.PARAGON_UNIVERSAL_CABLE, MGsOdditiesTileEntityTypes.APOTHEOSIS_UNIVERSAL_CABLE);
+        ClientRegistrationUtil.bindTileEntityRenderer(event, MGsOdditiesRenderThermodynamicConductor::new, MGsOdditiesTileEntityTypes.PARAGON_THERMODYNAMIC_CONDUCTOR, MGsOdditiesTileEntityTypes.APOTHEOSIS_THERMODYNAMIC_CONDUCTOR);
     }
 
     @SubscribeEvent

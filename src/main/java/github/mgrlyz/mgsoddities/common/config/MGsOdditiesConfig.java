@@ -24,6 +24,6 @@ public class MGsOdditiesConfig {
     }
 
     public static void onConfigLoad(ModConfigEvent configEvent) {
-        MGsOdditiesConfigHelper.onConfigLoad(configEvent, "mgsoddities", KNOWN_CONFIGS);
+        MGsOdditiesConfigHelper.onConfigLoad(configEvent, "mekanism", KNOWN_CONFIGS);
     }
 }

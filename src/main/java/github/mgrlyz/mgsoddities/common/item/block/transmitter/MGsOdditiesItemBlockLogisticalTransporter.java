@@ -7,8 +7,10 @@ import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.block.transmitter.BlockLargeTransmitter;
 import mekanism.common.tier.TransporterTier;
+import mekanism.common.util.MekanismUtils;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
@@ -18,21 +20,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class MGsOdditiesItemBlockLogisticalTransporter extends MGsOdditiesItemBlockTransporter<MGsOdditiesTileEntityLogisticalTransporter> {
-    public MGsOdditiesItemBlockLogisticalTransporter(BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter> block, Item.Properties properties) {
+    public MGsOdditiesItemBlockLogisticalTransporter(BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter> block, Properties properties) {
         super(block, properties);
     }
 
-    public @NotNull TransporterTier getTier() {
-        return (TransporterTier) Objects.requireNonNull((TransporterTier) Attribute.getTier(this.getBlock(), TransporterTier.class));
+    @NotNull
+    @Override
+    public TransporterTier getTier() {
+        return Objects.requireNonNull(Attribute.getTier(getBlock(), TransporterTier.class));
     }
 
-    protected void addStats(@NotNull ItemStack stack, @Nullable Item.@Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    @Override
+    protected void addStats(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.addStats(stack, context, tooltip, flag);
-        TransporterTier tier = this.getTier();
-        float tickRate = Math.max(context.tickRate(), 1.0F);
-        float speed = (float) TPTier.getSpeed(tier) / (100.0F / tickRate);
-        float pull = (float)TPTier.getPullAmount(tier) * tickRate / 10.0F;
-        tooltip.add(MekanismLang.SPEED.translateColored(EnumColor.INDIGO, new Object[]{EnumColor.GRAY, speed}));
-        tooltip.add(MekanismLang.PUMP_RATE.translateColored(EnumColor.INDIGO, new Object[]{EnumColor.GRAY, pull}));
+        TransporterTier tier = getTier();
+        float tickRate = Math.max(context.tickRate(), TickRateManager.MIN_TICKRATE);
+        float speed = TPTier.getSpeed(tier) / (5 * SharedConstants.TICKS_PER_SECOND / tickRate);
+        float pull = TPTier.getPullAmount(tier) * tickRate / MekanismUtils.TICKS_PER_HALF_SECOND;
+        tooltip.add(MekanismLang.SPEED.translateColored(EnumColor.INDIGO, EnumColor.GRAY, speed));
+        tooltip.add(MekanismLang.PUMP_RATE.translateColored(EnumColor.INDIGO, EnumColor.GRAY, pull));
     }
 }

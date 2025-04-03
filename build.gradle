@@ -73,7 +73,6 @@ dependencies {
     runtimeOnly "curse.maven:Forgematica-912441:6140034"
     runtimeOnly "curse.maven:MaFgLib-910766:6283570"
     runtimeOnly "curse.maven:WorldEdit-225608:5830452"
-    runtimeOnly "curse.maven:MekanismExtras-1026040:6345776"
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -118,5 +117,11 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+minecraft {
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
     }
 }

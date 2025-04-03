@@ -1,0 +1,9 @@
+{
+  "parent": "mekanism:block/transmitter/large/large",
+  "textures": {
+    "side": "mgsoddities:block/multipart/apotheosis/apotheosis_mechanical_pipe_vertical",
+    "center_down": "mgsoddities:block/multipart/apotheosis/apotheosis_mechanical_pipe",
+    "side_opaque": "mgsoddities:block/multipart/opaque/apotheosis/apotheosis_mechanical_pipe_vertical",
+    "center_opaque": "mgsoddities:block/multipart/opaque/apotheosis/apotheosis_mechanical_pipe"
+  }
+}

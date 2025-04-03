@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "github.mgrlyz.mgsoddities.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "mgsoddities.refmap.json",
+  "mixins": [
+    "MixinLogisticalTransporterBase",
+    "MixinMekanismRenderer",
+    "MekMGsOdditiesRenderer"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

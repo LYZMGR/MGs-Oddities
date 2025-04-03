@@ -20,7 +20,8 @@ public abstract class MixinLogisticalTransporterBase extends Transmitter<IItemHa
     @Shadow
     protected abstract void entityEntering(TransporterStack stack, int progress);
 
-    public void mekanismExtras$getEntity(TransporterStack stack, int progress) {
+    @Override
+    public void mekanismMGsOddities$getEntity(TransporterStack stack, int progress) {
         entityEntering(stack, progress);
     }
 }

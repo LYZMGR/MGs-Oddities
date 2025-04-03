@@ -7,16 +7,17 @@ public enum MGsOdditiesAlloyTier implements IAdvanceTier {
     public final String name;
     public final AdvanceTier advanceTier;
 
-    private MGsOdditiesAlloyTier(String name, AdvanceTier tier) {
+    MGsOdditiesAlloyTier(String name, AdvanceTier tier) {
         this.advanceTier = tier;
         this.name = name;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
+    @Override
     public AdvanceTier getAdvanceTier() {
-        return this.advanceTier;
+        return advanceTier;
     }
 }

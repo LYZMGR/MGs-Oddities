@@ -32,44 +32,51 @@ public enum MGsOdditiesConfigTranslations implements IConfigTranslation {
     private final String key;
     private final String title;
     private final String tooltip;
-    private final @Nullable String button;
+    @Nullable
+    private final String button;
 
-    private MGsOdditiesConfigTranslations(TranslationPreset preset, String type) {
+    MGsOdditiesConfigTranslations(TranslationPreset preset, String type) {
         this(preset.path(type), preset.title(type), preset.tooltip(type));
     }
 
-    private MGsOdditiesConfigTranslations(TranslationPreset preset, String type, String tooltipSuffix) {
+    MGsOdditiesConfigTranslations(TranslationPreset preset, String type, String tooltipSuffix) {
         this(preset.path(type), preset.title(type), preset.tooltip(type) + tooltipSuffix);
     }
 
-    private MGsOdditiesConfigTranslations(String path, String title, String tooltip) {
+    MGsOdditiesConfigTranslations(String path, String title, String tooltip) {
         this(path, title, tooltip, false);
     }
 
-    private MGsOdditiesConfigTranslations(String path, String title, String tooltip, boolean isSection) {
+    MGsOdditiesConfigTranslations(String path, String title, String tooltip, boolean isSection) {
         this(path, title, tooltip, IConfigTranslation.getSectionTitle(title, isSection));
     }
 
-    private MGsOdditiesConfigTranslations(String path, @Nullable String title, String tooltip, String button) {
+    MGsOdditiesConfigTranslations(String path, String title, String tooltip, @Nullable String button) {
         this.key = Util.makeDescriptionId("configuration", MGsOddities.rl(path));
         this.title = title;
         this.tooltip = tooltip;
         this.button = button;
     }
 
-    public @NotNull String getTranslationKey() {
-        return this.key;
+    @NotNull
+    @Override
+    public String getTranslationKey() {
+        return key;
     }
 
+    @Override
     public String title() {
-        return this.title;
+        return title;
     }
 
+    @Override
     public String tooltip() {
-        return this.tooltip;
+        return tooltip;
     }
 
-    public @Nullable String button() {
-        return this.button;
+    @Nullable
+    @Override
+    public String button() {
+        return button;
     }
 }

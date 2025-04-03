@@ -28,98 +28,95 @@ import java.util.Map;
 public abstract class MGsOdditiesTileEntityLogisticalTransporterBase extends MGsOdditiesTileEntityTransmitter {
     public MGsOdditiesTileEntityLogisticalTransporterBase(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
-        this.addCapabilityResolver(new TransporterCapabilityResolver());
+        addCapabilityResolver(new MGsOdditiesTileEntityLogisticalTransporterBase.TransporterCapabilityResolver());
     }
 
-    protected abstract LogisticalTransporterBase createTransmitter(Holder<Block> var1);
+    @Override
+    protected abstract LogisticalTransporterBase createTransmitter(Holder<Block> blockProvider);
 
+    @Override
     public LogisticalTransporterBase getTransmitter() {
-        return (LogisticalTransporterBase)super.getTransmitter();
+        return (LogisticalTransporterBase) super.getTransmitter();
     }
 
     public static void tickClient(Level level, BlockPos pos, BlockState state, MGsOdditiesTileEntityLogisticalTransporterBase transmitter) {
         transmitter.getTransmitter().onUpdateClient();
     }
 
+    @Override
     public void onUpdateServer() {
         super.onUpdateServer();
-        this.getTransmitter().onUpdateServer();
+        getTransmitter().onUpdateServer();
     }
 
+    @Override
     public void blockRemoved() {
         super.blockRemoved();
-        if (!this.isRemote()) {
-            LogisticalTransporterBase transporter = this.getTransmitter();
+        if (!isRemote()) {
+            LogisticalTransporterBase transporter = getTransmitter();
             if (!transporter.isUpgrading()) {
-                for(TransporterStack stack : transporter.getTransit()) {
+                for (TransporterStack stack : transporter.getTransit()) {
                     TransporterUtils.drop(transporter, stack);
                 }
             }
         }
-
     }
 
+    @Override
     public void sideChanged(@NotNull Direction side, @NotNull ConnectionType old, @NotNull ConnectionType type) {
         super.sideChanged(side, old, type);
-        if ((type != ConnectionType.NONE || old == ConnectionType.PUSH) && (type != ConnectionType.PUSH || old == ConnectionType.NONE)) {
-            if (old == ConnectionType.NONE && type != ConnectionType.PUSH || old == ConnectionType.PUSH && type != ConnectionType.NONE) {
-                this.invalidateCapabilities();
-            }
-        } else {
-            this.invalidateCapability(Capabilities.ITEM.block(), side);
+        if (type == ConnectionType.NONE && old != ConnectionType.PUSH || type == ConnectionType.PUSH && old != ConnectionType.NONE) {
+            invalidateCapability(Capabilities.ITEM.block(), side);
+        } else if (old == ConnectionType.NONE && type != ConnectionType.PUSH || old == ConnectionType.PUSH && type != ConnectionType.NONE) {
+            invalidateCapabilities();
         }
-
     }
 
     @NothingNullByDefault
     private class TransporterCapabilityResolver implements ICapabilityResolver<@Nullable Direction> {
-        private static final List<BlockCapability<?, @Nullable Direction>> SUPPORTED_CAPABILITY;
-        private final Map<Direction, CursedTransporterItemHandler> cursedHandlers = new EnumMap(Direction.class);
-        private final Map<Direction, IItemHandler> handlers = new EnumMap(Direction.class);
 
-        private TransporterCapabilityResolver() {
-        }
+        private static final List<BlockCapability<?, @Nullable Direction>> SUPPORTED_CAPABILITY = Collections.singletonList(Capabilities.ITEM.block());
 
+        private final Map<Direction, CursedTransporterItemHandler> cursedHandlers = new EnumMap<>(Direction.class);
+        private final Map<Direction, IItemHandler> handlers = new EnumMap<>(Direction.class);
+
+        @Override
         public List<BlockCapability<?, @Nullable Direction>> getSupportedCapabilities() {
             return SUPPORTED_CAPABILITY;
         }
 
-        public <T> @Nullable T resolve(BlockCapability<T, @Nullable Direction> capability, @Nullable Direction side) {
+        @Nullable
+        @Override
+        public <T> T resolve(BlockCapability<T, @Nullable Direction> capability, @Nullable Direction side) {
             if (side == null) {
                 return null;
-            } else {
-                IItemHandler cachedCapability = (IItemHandler)this.handlers.get(side);
-                if (cachedCapability == null) {
-                    LogisticalTransporterBase transporter = MGsOdditiesTileEntityLogisticalTransporterBase.this.getTransmitter();
-                    if (transporter.exposesInsertCap(side)) {
-                        CursedTransporterItemHandler cached = (CursedTransporterItemHandler)this.cursedHandlers.get(side);
-                        if (cached == null) {
-                            cached = new CursedTransporterItemHandler(transporter, WorldUtils.relativePos(MGsOdditiesTileEntityLogisticalTransporterBase.this.getWorldPositionLong(), side), () -> MGsOdditiesTileEntityLogisticalTransporterBase.this.level == null ? -1L : MGsOdditiesTileEntityLogisticalTransporterBase.this.level.getGameTime());
-                            this.cursedHandlers.put(side, cached);
-                        }
-
-                        this.handlers.put(side, cached);
-                        return (T)cached;
-                    }
-                }
-
-                return (T)cachedCapability;
             }
+            IItemHandler cachedCapability = handlers.get(side);
+            if (cachedCapability == null) {
+                LogisticalTransporterBase transporter = getTransmitter();
+                if (transporter.exposesInsertCap(side)) {
+                    CursedTransporterItemHandler cached = cursedHandlers.get(side);
+                    if (cached == null) {
+                        cached = new CursedTransporterItemHandler(transporter, WorldUtils.relativePos(getWorldPositionLong(), side), () -> level == null ? -1 : level.getGameTime());
+                        cursedHandlers.put(side, cached);
+                    }
+                    handlers.put(side, cached);
+                    return (T) cached;
+                }
+            }
+            return (T) cachedCapability;
         }
 
+        @Override
         public void invalidate(BlockCapability<?, @Nullable Direction> capability, @Nullable Direction side) {
             if (side != null) {
-                this.handlers.remove(side);
+                handlers.remove(side);
             }
-
         }
 
+        @Override
         public void invalidateAll() {
-            this.handlers.clear();
-        }
-
-        static {
-            SUPPORTED_CAPABILITY = Collections.singletonList(Capabilities.ITEM.block());
+            handlers.clear();
         }
     }
 }

@@ -5,6 +5,7 @@ import github.mgrlyz.mgsoddities.common.capabilities.energy.MGsOdditiesEnergyCub
 import github.mgrlyz.mgsoddities.common.tier.ECtier;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.SerializationConstants;
 import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
@@ -37,163 +38,162 @@ import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 
 public class MGsOdditiesTileEntityEnergyCube extends TileEntityConfigurableMachine {
-    public static final ModelProperty<CubeSideState[]> SIDE_STATE_PROPERTY = new ModelProperty();
+    public static final ModelProperty<CubeSideState[]> SIDE_STATE_PROPERTY = new ModelProperty<>();
+
     private ECtier tier;
     private float prevScale;
+
     private MGsOdditiesEnergyCubeEnergyContainer energyContainer;
-    @WrappingComputerMethod(
-            wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class,
-            methodNames = {"getChargeItem"},
-            docPlaceholder = "charge slot"
-    )
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getChargeItem", docPlaceholder = "charge slot")
     EnergyInventorySlot chargeSlot;
-    @WrappingComputerMethod(
-            wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class,
-            methodNames = {"getDischargeItem"},
-            docPlaceholder = "discharge slot"
-    )
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getDischargeItem", docPlaceholder = "discharge slot")
     EnergyInventorySlot dischargeSlot;
 
     public MGsOdditiesTileEntityEnergyCube(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
-        this.configComponent.setupIOConfig(TransmissionType.ITEM, this.chargeSlot, this.dischargeSlot, RelativeSide.FRONT, true).setCanEject(false);
-        this.configComponent.setupIOConfig(TransmissionType.ENERGY, this.energyContainer, RelativeSide.FRONT).setEjecting(true);
-        this.ejectorComponent = new TileComponentEjector(this, () -> this.tier.getOutput());
-        this.ejectorComponent.setOutputData(this.configComponent, new TransmissionType[]{TransmissionType.ENERGY}).setCanEject((type) -> this.canFunction());
+        configComponent.setupIOConfig(TransmissionType.ITEM, chargeSlot, dischargeSlot, RelativeSide.FRONT, true).setCanEject(false);
+        configComponent.setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT).setEjecting(true);
+        ejectorComponent = new TileComponentEjector(this, () -> tier.getOutput());
+        ejectorComponent.setOutputData(configComponent, TransmissionType.ENERGY).setCanEject(type -> canFunction());
     }
 
+    @Override
     protected void presetVariables() {
         super.presetVariables();
-        this.tier = (ECtier) MGsOdditiesAttribute.getAdvanceTier(this.getBlockHolder(), ECtier.class);
+        tier = MGsOdditiesAttribute.getAdvanceTier(getBlockHolder(), ECtier.class);
     }
 
-    protected @NotNull IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
+    @NotNull
+    @Override
+    protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
         EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this);
-        builder.addContainer(this.energyContainer = MGsOdditiesEnergyCubeEnergyContainer.create(this.tier, listener));
+        builder.addContainer(energyContainer = MGsOdditiesEnergyCubeEnergyContainer.create(tier, listener));
         return builder.build();
     }
 
-    protected @NotNull IInventorySlotHolder getInitialInventory(IContentsListener listener) {
+    @NotNull
+    @Override
+    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
         InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this);
-        builder.addSlot(this.dischargeSlot = EnergyInventorySlot.fillOrConvert(this.energyContainer, this::getLevel, listener, 17, 35));
-        builder.addSlot(this.chargeSlot = EnergyInventorySlot.drain(this.energyContainer, listener, 143, 35));
-        this.dischargeSlot.setSlotOverlay(SlotOverlay.MINUS);
-        this.chargeSlot.setSlotOverlay(SlotOverlay.PLUS);
+        builder.addSlot(dischargeSlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 17, 35));
+        builder.addSlot(chargeSlot = EnergyInventorySlot.drain(energyContainer, listener, 143, 35));
+        dischargeSlot.setSlotOverlay(SlotOverlay.MINUS);
+        chargeSlot.setSlotOverlay(SlotOverlay.PLUS);
         return builder.build();
     }
 
     public ECtier getAdvanceTier() {
-        return this.tier;
+        return tier;
     }
 
+    @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        this.chargeSlot.drainContainer();
-        this.dischargeSlot.fillContainerOrConvert();
-        float newScale = MekanismUtils.getScale(this.prevScale, this.energyContainer);
-        if (newScale != this.prevScale) {
-            this.prevScale = newScale;
+        chargeSlot.drainContainer();
+        dischargeSlot.fillContainerOrConvert();
+        float newScale = MekanismUtils.getScale(prevScale, energyContainer);
+        if (newScale != prevScale) {
+            prevScale = newScale;
             sendUpdatePacket = true;
         }
-
         return sendUpdatePacket;
     }
 
+    @Override
     public int getRedstoneLevel() {
-        return MekanismUtils.redstoneLevelFromContents(this.energyContainer.getEnergy(), this.energyContainer.getMaxEnergy());
+        return MekanismUtils.redstoneLevelFromContents(energyContainer.getEnergy(), energyContainer.getMaxEnergy());
     }
 
+    @Override
     protected boolean makesComparatorDirty(ContainerType<?, ?, ?> type) {
         return type == ContainerType.ENERGY;
     }
 
+    @Override
     public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
         if (upgradeData instanceof EnergyCubeUpgradeData data) {
-            this.redstone = data.redstone;
-            this.setControlType(data.controlType);
-            this.getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
-            this.chargeSlot.setStack(data.chargeSlot.getStack());
-            this.dischargeSlot.deserializeNBT(provider, data.dischargeSlot.serializeNBT(provider));
-
-            for(ITileComponent component : this.getComponents()) {
+            redstone = data.redstone;
+            setControlType(data.controlType);
+            getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
+            chargeSlot.setStack(data.chargeSlot.getStack());
+            dischargeSlot.deserializeNBT(provider, data.dischargeSlot.serializeNBT(provider));
+            for (ITileComponent component : getComponents()) {
                 component.read(data.components, provider);
             }
         } else {
             super.parseUpgradeData(provider, upgradeData);
         }
-
     }
 
     public MGsOdditiesEnergyCubeEnergyContainer getEnergyContainer() {
-        return this.energyContainer;
+        return energyContainer;
     }
 
-    public @NotNull EnergyCubeUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new EnergyCubeUpgradeData(provider, this.redstone, this.getControlType(), this.getEnergyContainer(), this.chargeSlot, this.dischargeSlot, this.getComponents());
+    @NotNull
+    @Override
+    public EnergyCubeUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+        return new EnergyCubeUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), chargeSlot, dischargeSlot, getComponents());
     }
 
     public float getEnergyScale() {
-        return this.prevScale;
+        return prevScale;
     }
 
-    public @NotNull CompoundTag getReducedUpdateTag(@NotNull HolderLookup.@NotNull Provider provider) {
+    @NotNull
+    @Override
+    public CompoundTag getReducedUpdateTag(@NotNull HolderLookup.Provider provider) {
         CompoundTag updateTag = super.getReducedUpdateTag(provider);
-        updateTag.putFloat("scale", this.prevScale);
+        updateTag.putFloat(SerializationConstants.SCALE, prevScale);
         return updateTag;
     }
 
-    public void handleUpdateTag(@NotNull CompoundTag tag, @NotNull HolderLookup.@NotNull Provider provider) {
-        ConfigInfo config = this.getConfig().getConfig(TransmissionType.ENERGY);
+    @Override
+    public void handleUpdateTag(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
+        ConfigInfo config = getConfig().getConfig(TransmissionType.ENERGY);
         DataType[] currentConfig = new DataType[EnumUtils.SIDES.length];
         if (config != null) {
-            for(RelativeSide side : EnumUtils.SIDES) {
+            for (RelativeSide side : EnumUtils.SIDES) {
                 currentConfig[side.ordinal()] = config.getDataType(side);
             }
         }
-
         super.handleUpdateTag(tag, provider);
-        NBTUtils.setFloatIfPresent(tag, "scale", (scale) -> this.prevScale = scale);
+        NBTUtils.setFloatIfPresent(tag, SerializationConstants.SCALE, scale -> prevScale = scale);
         if (config != null) {
-            for(RelativeSide side : EnumUtils.SIDES) {
+            for (RelativeSide side : EnumUtils.SIDES) {
                 if (currentConfig[side.ordinal()] != config.getDataType(side)) {
-                    this.updateModelData();
+                    updateModelData();
                     break;
                 }
             }
         }
-
     }
 
-    public @NotNull ModelData getModelData() {
-        ConfigInfo config = this.getConfig().getConfig(TransmissionType.ENERGY);
+    @NotNull
+    @Override
+    public ModelData getModelData() {
+        ConfigInfo config = getConfig().getConfig(TransmissionType.ENERGY);
         if (config == null) {
             return super.getModelData();
-        } else {
-            CubeSideState[] sideStates = new CubeSideState[EnumUtils.SIDES.length];
-
-            for(RelativeSide side : EnumUtils.SIDES) {
-                CubeSideState state = MGsOdditiesTileEntityEnergyCube.CubeSideState.INACTIVE;
-                ISlotInfo slotInfo = config.getSlotInfo(side);
-                if (slotInfo != null) {
-                    if (slotInfo.canOutput()) {
-                        state = MGsOdditiesTileEntityEnergyCube.CubeSideState.ACTIVE_LIT;
-                    } else if (slotInfo.canInput()) {
-                        state = MGsOdditiesTileEntityEnergyCube.CubeSideState.ACTIVE_UNLIT;
-                    }
-                }
-
-                sideStates[side.ordinal()] = state;
-            }
-            return ModelData.builder().with(SIDE_STATE_PROPERTY, sideStates).build();
         }
+        CubeSideState[] sideStates = new CubeSideState[EnumUtils.SIDES.length];
+        for (RelativeSide side : EnumUtils.SIDES) {
+            CubeSideState state = CubeSideState.INACTIVE;
+            ISlotInfo slotInfo = config.getSlotInfo(side);
+            if (slotInfo != null) {
+                if (slotInfo.canOutput()) {
+                    state = CubeSideState.ACTIVE_LIT;
+                } else if (slotInfo.canInput()) {
+                    state = CubeSideState.ACTIVE_UNLIT;
+                }
+            }
+            sideStates[side.ordinal()] = state;
+        }
+        return ModelData.builder().with(SIDE_STATE_PROPERTY, sideStates).build();
     }
 
-    public static enum CubeSideState {
+    public enum CubeSideState {
         ACTIVE_LIT,
         ACTIVE_UNLIT,
-        INACTIVE;
-
-        private CubeSideState() {
-        }
+        INACTIVE
     }
 }

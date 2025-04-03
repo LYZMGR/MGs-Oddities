@@ -5,9 +5,9 @@ import github.mgrlyz.mgsoddities.common.tile.transmitter.MGsOdditiesTileEntityTr
 import github.mgrlyz.mgsoddities.common.util.IMGsOdditiesUpgradeableTransmitter;
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
+import mekanism.api.SerializationConstants;
 import mekanism.api.energy.IMekanismStrictEnergyHandler;
 import mekanism.api.energy.IStrictEnergyHandler;
-import mekanism.common.capabilities.energy.VariableCapacityEnergyContainer;
 import mekanism.common.content.network.EnergyNetwork;
 import mekanism.common.content.network.transmitter.UniversalCable;
 import mekanism.common.lib.transmitter.ConnectionType;
@@ -24,65 +24,75 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class MGsOdditiesUniversalCable extends UniversalCable implements IMekanismStrictEnergyHandler, IMGsOdditiesUpgradeableTransmitter<UniversalCableUpgradeData> {
+public class MGsOdditiesUniversalCable extends UniversalCable implements IMekanismStrictEnergyHandler,
+        IMGsOdditiesUpgradeableTransmitter<UniversalCableUpgradeData> {
     public MGsOdditiesUniversalCable(Holder<Block> blockProvider, MGsOdditiesTileEntityTransmitter tile) {
         super(blockProvider, tile);
     }
 
+    @Override
     public void pullFromAcceptors() {
-        if (this.hasPullSide && this.getAvailablePull() > 0L) {
-            EnergyAcceptorCache acceptorCache = this.getAcceptorCache();
-
-            for(Direction side : EnumUtils.DIRECTIONS) {
-                if (this.isConnectionType(side, ConnectionType.PULL)) {
-                    IStrictEnergyHandler connectedAcceptor = (IStrictEnergyHandler)acceptorCache.getConnectedAcceptor(side);
-                    if (connectedAcceptor != null) {
-                        long received = connectedAcceptor.extractEnergy(this.getAvailablePull(), Action.SIMULATE);
-                        if (received > 0L && this.takeEnergy(received, Action.SIMULATE) == 0L) {
-                            long remainder = this.takeEnergy(received, Action.EXECUTE);
-                            connectedAcceptor.extractEnergy(received - remainder, Action.EXECUTE);
-                        }
-                    }
+        if (!hasPullSide || getAvailablePull() <= 0) {
+            return;
+        }
+        EnergyAcceptorCache acceptorCache = getAcceptorCache();
+        for (Direction side : EnumUtils.DIRECTIONS) {
+            if (!isConnectionType(side, ConnectionType.PULL)) {
+                continue;
+            }
+            IStrictEnergyHandler connectedAcceptor = acceptorCache.getConnectedAcceptor(side);
+            if (connectedAcceptor != null) {
+                long received = connectedAcceptor.extractEnergy(getAvailablePull(), Action.SIMULATE);
+                if (received > 0L && takeEnergy(received, Action.SIMULATE) == 0L) {
+                    //If we received some energy and are able to insert it all
+                    long remainder = takeEnergy(received, Action.EXECUTE);
+                    connectedAcceptor.extractEnergy(received - remainder, Action.EXECUTE);
                 }
             }
-
         }
     }
 
     private long getAvailablePull() {
-        return this.hasTransmitterNetwork() ? Math.min(this.getCapacity(), ((EnergyNetwork)this.getTransmitterNetwork()).energyContainer.getNeeded()) : Math.min(this.getCapacity(), this.buffer.getNeeded());
+        if (hasTransmitterNetwork()) {
+            return Math.min(getCapacity(), getTransmitterNetwork().energyContainer.getNeeded());
+        }
+        return Math.min(getCapacity(), buffer.getNeeded());
     }
 
-    public @NotNull long getCapacityAsFloatingLong() {
-        return CTier.getCapacityAsLong(this.tier);
+    public long getCapacityAsFloatingLong() {
+        return CTier.getCapacityAsLong(tier);
     }
 
+    @Override
     public long getCapacity() {
-        return CTier.getCapacityAsLong(this.tier);
+        return CTier.getCapacityAsLong(tier);
     }
 
     private long takeEnergy(long amount, Action action) {
-        return this.hasTransmitterNetwork() ? ((EnergyNetwork)this.getTransmitterNetwork()).energyContainer.insert(amount, action, AutomationType.INTERNAL) : this.buffer.insert(amount, action, AutomationType.INTERNAL);
+        if (hasTransmitterNetwork()) {
+            return getTransmitterNetwork().energyContainer.insert(amount, action, AutomationType.INTERNAL);
+        }
+        return buffer.insert(amount, action, AutomationType.INTERNAL);
     }
 
-    protected void handleContentsUpdateTag(@NotNull EnergyNetwork network, @NotNull CompoundTag tag, @NotNull HolderLookup.@NotNull Provider provider) {
+    @Override
+    protected void handleContentsUpdateTag(@NotNull EnergyNetwork network, @NotNull CompoundTag tag, @NotNull HolderLookup.Provider provider) {
         super.handleContentsUpdateTag(network, tag, provider);
-        VariableCapacityEnergyContainer var10002 = network.energyContainer;
-        Objects.requireNonNull(var10002);
-        NBTUtils.setLegacyEnergyIfPresent(tag, "energy", var10002::setEnergy);
-        NBTUtils.setFloatIfPresent(tag, "scale", (scale) -> network.currentScale = scale);
+        NBTUtils.setLegacyEnergyIfPresent(tag, SerializationConstants.ENERGY, network.energyContainer::setEnergy);
+        NBTUtils.setFloatIfPresent(tag, SerializationConstants.SCALE, scale -> network.currentScale = scale);
     }
 
+    @Override
     public @Nullable UniversalCableUpgradeData getUpgradeData() {
         return super.getUpgradeData();
     }
 
+    @Override
     public boolean dataTypeMatches(@NotNull TransmitterUpgradeData data) {
         return super.dataTypeMatches(data);
     }
 
+    @Override
     public void parseUpgradeData(@NotNull UniversalCableUpgradeData data) {
         super.parseUpgradeData(data);
     }

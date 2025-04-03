@@ -6,7 +6,6 @@ import github.mgrlyz.mgsoddities.common.registries.block.MGsOdditiesBlocks;
 import mekanism.client.model.data.TransmitterModelData;
 import mekanism.common.block.states.BlockStateHelper;
 import mekanism.common.block.states.TransmitterType;
-import mekanism.common.registration.impl.BlockRegistryObject;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.Block;
@@ -18,31 +17,33 @@ public class MGsOdditiesTileEntityLogisticalTransporter extends MGsOdditiesTileE
         super(blockProvider, pos, state);
     }
 
+    @Override
     protected MGsOdditiesLogisticalTransporter createTransmitter(Holder<Block> blockProvider) {
         return new MGsOdditiesLogisticalTransporter(blockProvider, this);
     }
 
+    @Override
     public MGsOdditiesLogisticalTransporter getTransmitter() {
-        return (MGsOdditiesLogisticalTransporter)super.getTransmitter();
+        return (MGsOdditiesLogisticalTransporter) super.getTransmitter();
     }
 
+    @Override
     public TransmitterType getTransmitterType() {
         return TransmitterType.LOGISTICAL_TRANSPORTER;
     }
 
+    @Override
     protected void updateModelData(TransmitterModelData modelData) {
         super.updateModelData(modelData);
-        modelData.setHasColor(this.getTransmitter().getColor() != null);
+        modelData.setHasColor(getTransmitter().getColor() != null);
     }
 
-    protected @NotNull BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
-        BlockRegistryObject var10001;
-        switch (tier) {
-            case PARAGON -> var10001 = MGsOdditiesBlocks.PARAGON_LOGISTICAL_TRANSPORTER;
-            case APOTHEOSIS -> var10001 = MGsOdditiesBlocks.APOTHEOSIS_LOGISTICAL_TRANSPORTER;
-            default -> throw new MatchException((String)null, (Throwable)null);
-        }
-
-        return BlockStateHelper.copyStateData(current, var10001);
+    @NotNull
+    @Override
+    protected BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
+        return BlockStateHelper.copyStateData(current, switch (tier) {
+            case PARAGON -> MGsOdditiesBlocks.PARAGON_LOGISTICAL_TRANSPORTER;
+            case APOTHEOSIS -> MGsOdditiesBlocks.APOTHEOSIS_LOGISTICAL_TRANSPORTER;
+        });
     }
 }

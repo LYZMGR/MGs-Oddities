@@ -7,7 +7,6 @@ import mekanism.common.MekanismLang;
 import mekanism.common.block.transmitter.BlockLargeTransmitter;
 import mekanism.common.item.block.ItemBlockTooltip;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
@@ -15,26 +14,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MGsOdditiesItemBlockTransporter<TILE extends MGsOdditiesTileEntityLogisticalTransporterBase> extends ItemBlockTooltip<BlockLargeTransmitter<TILE>> {
-    private final @Nullable ILangEntry mgsodditiesDetails;
+public class MGsOdditiesItemBlockTransporter <TILE extends MGsOdditiesTileEntityLogisticalTransporterBase> extends ItemBlockTooltip<BlockLargeTransmitter<TILE>> {
+    @Nullable
+    private final ILangEntry extraDetails;
 
-    public MGsOdditiesItemBlockTransporter(BlockLargeTransmitter<TILE> block, Item.Properties properties) {
-        this(block, properties, (ILangEntry)null);
+    public MGsOdditiesItemBlockTransporter(BlockLargeTransmitter<TILE> block, Properties properties) {
+        this(block, properties, null);
     }
 
-    public MGsOdditiesItemBlockTransporter(BlockLargeTransmitter<TILE> block, Item.Properties properties, @Nullable ILangEntry mgsodditiesDetails) {
-        super(block, true, properties);
-        this.mgsodditiesDetails = mgsodditiesDetails;
+    public MGsOdditiesItemBlockTransporter(BlockLargeTransmitter<TILE> block, Properties properties, @Nullable ILangEntry extraDetails) {
+        super(block,true, properties);
+        this.extraDetails = extraDetails;
     }
 
-    protected void addDetails(@NotNull ItemStack stack, @Nullable Item.@Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    @Override
+    protected void addDetails(@NotNull ItemStack stack, @Nullable TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.addDetails(stack, context, tooltip, flag);
         tooltip.add(MekanismLang.CAPABLE_OF_TRANSFERRING.translateColored(EnumColor.DARK_GRAY));
-        tooltip.add(MekanismLang.ITEMS.translateColored(EnumColor.PURPLE, new Object[]{MekanismLang.UNIVERSAL}));
-        tooltip.add(MekanismLang.BLOCKS.translateColored(EnumColor.PURPLE, new Object[]{MekanismLang.UNIVERSAL}));
-        if (this.mgsodditiesDetails != null) {
-            tooltip.add(this.mgsodditiesDetails.translateColored(EnumColor.DARK_RED));
+        tooltip.add(MekanismLang.ITEMS.translateColored(EnumColor.PURPLE, MekanismLang.UNIVERSAL));
+        tooltip.add(MekanismLang.BLOCKS.translateColored(EnumColor.PURPLE, MekanismLang.UNIVERSAL));
+        if (extraDetails != null) {
+            tooltip.add(extraDetails.translateColored(EnumColor.DARK_RED));
         }
-
     }
 }

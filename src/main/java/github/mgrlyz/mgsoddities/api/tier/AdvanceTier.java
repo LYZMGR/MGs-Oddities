@@ -19,57 +19,63 @@ public enum AdvanceTier implements StringRepresentable, SupportsColorMap {
     PARAGON("Paragon",new int[]{250, 238, 77}, MapColor.GOLD),
     APOTHEOSIS("Apotheosis",new int[]{102, 153, 216}, MapColor.COLOR_LIGHT_BLUE);
 
-    public static final IntFunction<AdvanceTier> BY_ID = ByIdMap.continuous(Enum::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
-    public static final StreamCodec<ByteBuf, AdvanceTier> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, Enum::ordinal);
-    private static final AdvanceTier[] BASE_TIERS = values();
+    public static final IntFunction<AdvanceTier> BY_ID = ByIdMap.continuous(AdvanceTier::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
+    public static final StreamCodec<ByteBuf, AdvanceTier> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, AdvanceTier::ordinal);
+
+    private static final AdvanceTier[] TIERS = values();
+
     private final String name;
     private final MapColor mapColor;
     private TextColor textColor;
     private int[] rgbCode;
     private int argb;
 
-    private AdvanceTier(String name, int[] rgbCode, MapColor mapColor) {
+    AdvanceTier(String name, int[] rgbCode, MapColor mapColor) {
         this.name = name;
         this.mapColor = mapColor;
-        this.setColorFromAtlas(rgbCode);
+        setColorFromAtlas(rgbCode);
     }
 
-
     public String getSimpleName() {
-        return this.name;
+        return name;
     }
 
     public String getLowerName() {
-        return this.getSimpleName().toLowerCase(Locale.ROOT);
+        return getSimpleName().toLowerCase(Locale.ROOT);
     }
 
     public MapColor getMapColor() {
-        return this.mapColor;
+        return mapColor;
     }
 
+    @Override
     public int getPackedColor() {
-        return this.argb;
+        return argb;
     }
 
+    @Override
     public int[] getRgbCode() {
-        return this.rgbCode;
+        return rgbCode;
     }
 
+    @Override
     public void setColorFromAtlas(int[] color) {
         this.rgbCode = color;
-        this.argb = FastColor.ARGB32.color(this.rgbCode[0], this.rgbCode[1], this.rgbCode[2]);
-        this.textColor = TextColor.fromRgb(this.argb);
+        this.argb = FastColor.ARGB32.color(rgbCode[0], rgbCode[1], rgbCode[2]);
+        this.textColor = TextColor.fromRgb(argb);
     }
 
     public TextColor getColor() {
         return this.textColor;
     }
 
-    public @NotNull String getSerializedName() {
-        return this.name().toLowerCase(Locale.ROOT);
+    @NotNull
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public static AdvanceTier byIndexStatic(int index) {
-        return (AdvanceTier) MathUtils.getByIndexMod(BASE_TIERS, index);
+        return MathUtils.getByIndexMod(TIERS, index);
     }
 }

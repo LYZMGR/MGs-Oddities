@@ -12,5 +12,15 @@
   "block.mgsoddities.dyson_sphere_frame": "Dyson Sphere Frame",
   "block.mgsoddities.stellar_matter_o": "Stellar Matter: §bO-type",
   "block.mgsoddities.stellar_matter_f": "Stellar Matter: §eF-type",
-  "block.mgsoddities.stellar_matter_m": "Stellar Matter: §6M-type"
+  "block.mgsoddities.stellar_matter_m": "Stellar Matter: §6M-type",
+  "block.mgsoddities.paragon_universal_cable": "§6paragon_universal_cable",
+  "block.mgsoddities.apotheosis_universal_cable": "§bapotheosis_universal_cable",
+  "block.mgsoddities.paragon_mechanical_pipe": "§6paragon_mechanical_pipe",
+  "block.mgsoddities.apotheosis_mechanical_pipe": "§bapotheosis_mechanical_pipe",
+  "block.mgsoddities.paragon_pressurized_tube": "§6paragon_pressurized_tube",
+  "block.mgsoddities.apotheosis_pressurized_tube": "§bapotheosis_pressurized_tube",
+  "block.mgsoddities.paragon_logistical_transporter": "§6paragon_logistical_transporte",
+  "block.mgsoddities.apotheosis_logistical_transporter": "§bapotheosis_logistical_transporter",
+  "block.mgsoddities.paragon_thermodynamic_conductor": "§6paragon_thermodynamic_conductor",
+  "block.mgsoddities.apotheosis_thermodynamic_conductor": "§bapotheosis_thermodynamic_conductor"
 }

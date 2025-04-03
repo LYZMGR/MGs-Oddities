@@ -4,8 +4,8 @@ import com.mojang.serialization.DataResult;
 import github.mgrlyz.mgsoddities.api.tier.AdvanceTier;
 import github.mgrlyz.mgsoddities.common.content.network.transmitter.MGsOdditiesPressurizedTube;
 import github.mgrlyz.mgsoddities.common.registries.block.MGsOdditiesBlocks;
-import mekanism.api.IContentsListener;
 import mekanism.api.MekanismAPI;
+import mekanism.api.SerializationConstants;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
@@ -22,7 +22,6 @@ import mekanism.common.content.network.transmitter.PressurizedTube;
 import mekanism.common.integration.computer.IComputerTile;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.lib.transmitter.ConnectionType;
-import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.tile.interfaces.ITileRadioactive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,135 +41,141 @@ import java.util.function.Predicate;
 
 public class MGsOdditiesTileEntityPressurizedTube extends MGsOdditiesTileEntityTransmitter implements IComputerTile, ITileRadioactive {
     private final ChemicalHandlerManager chemicalHandlerManager;
-
     public MGsOdditiesTileEntityPressurizedTube(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
-        Predicate<Direction> canExtract = this.getExtractPredicate();
-        Predicate<Direction> canInsert = this.getInsertPredicate();
-        this.addCapabilityResolver(this.chemicalHandlerManager = new ChemicalHandlerManager((direction) -> {
-            MGsOdditiesPressurizedTube tube = this.getTransmitter();
-            return (direction == null || tube.getConnectionTypeRaw(direction) != ConnectionType.NONE) && !tube.isRedstoneActivated() ? tube.getChemicalTanks(direction) : Collections.emptyList();
-        }, new DynamicChemicalHandler(this::getChemicalTanks, canExtract, canInsert, (IContentsListener)null)));
+        Predicate<@Nullable Direction> canExtract = getExtractPredicate();
+        Predicate<@Nullable Direction> canInsert = getInsertPredicate();
+        addCapabilityResolver(chemicalHandlerManager = new ChemicalHandlerManager(direction -> {
+            MGsOdditiesPressurizedTube tube = getTransmitter();
+            if (direction != null && (tube.getConnectionTypeRaw(direction) == ConnectionType.NONE) || tube.isRedstoneActivated()) {
+                return Collections.emptyList();
+            }
+            return tube.getChemicalTanks(direction);
+        }, new DynamicChemicalHandler(this::getChemicalTanks, canExtract, canInsert, null)));
     }
 
+    @Override
     protected MGsOdditiesPressurizedTube createTransmitter(Holder<Block> blockProvider) {
         return new MGsOdditiesPressurizedTube(blockProvider, this);
     }
 
+    @Override
     public MGsOdditiesPressurizedTube getTransmitter() {
-        return (MGsOdditiesPressurizedTube)super.getTransmitter();
+        return (MGsOdditiesPressurizedTube) super.getTransmitter();
     }
 
+    @Override
     protected void onUpdateServer() {
-        this.getTransmitter().pullFromAcceptors();
+        getTransmitter().pullFromAcceptors();
         super.onUpdateServer();
     }
 
+    @Override
     public TransmitterType getTransmitterType() {
         return TransmitterType.PRESSURIZED_TUBE;
     }
 
-    protected @NotNull BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
-        BlockRegistryObject var10001;
-        switch (tier) {
-            case PARAGON -> var10001 = MGsOdditiesBlocks.PARAGON_PRESSURIZED_TUBE;
-            case APOTHEOSIS -> var10001 = MGsOdditiesBlocks.APOTHEOSIS_PRESSURIZED_TUBE;
-            default -> throw new MatchException((String)null, (Throwable)null);
-        }
-
-        return BlockStateHelper.copyStateData(current, var10001);
+    @NotNull
+    @Override
+    protected BlockState upgradeResult(@NotNull BlockState current, @NotNull AdvanceTier tier) {
+        return BlockStateHelper.copyStateData(current, switch (tier) {
+            case PARAGON -> MGsOdditiesBlocks.PARAGON_PRESSURIZED_TUBE;
+            case APOTHEOSIS -> MGsOdditiesBlocks.APOTHEOSIS_PRESSURIZED_TUBE;
+        });
     }
 
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider) {
+    @NotNull
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider) {
         CompoundTag updateTag = super.getUpdateTag(provider);
-        if (this.getTransmitter().hasTransmitterNetwork()) {
-            ChemicalNetwork network = (ChemicalNetwork)this.getTransmitter().getTransmitterNetwork();
+        if (getTransmitter().hasTransmitterNetwork()) {
+            ChemicalNetwork network = getTransmitter().getTransmitterNetwork();
             if (!network.lastChemical.is(MekanismAPI.EMPTY_CHEMICAL_KEY)) {
                 DataResult<Tag> encoded = Chemical.HOLDER_CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), network.lastChemical);
                 if (encoded.isSuccess()) {
-                    updateTag.put("chemical", (Tag)encoded.getOrThrow());
+                    updateTag.put(SerializationConstants.CHEMICAL, encoded.getOrThrow());
                 } else {
-                    encoded.ifError((error) -> Mekanism.logger.warn("Failed to encode last chemical: {}", error.message()));
+                    encoded.ifError(error -> Mekanism.logger.warn("Failed to encode last chemical: {}", error.message()));
                 }
             }
-
-            updateTag.putFloat("scale", network.currentScale);
+            updateTag.putFloat(SerializationConstants.SCALE, network.currentScale);
         }
-
         return updateTag;
     }
 
+    @Override
     public float getRadiationScale() {
         if (IRadiationManager.INSTANCE.isRadiationEnabled()) {
-            PressurizedTube tube = this.getTransmitter();
-            if (this.isRemote()) {
+            PressurizedTube tube = getTransmitter();
+            if (isRemote()) {
                 if (tube.hasTransmitterNetwork()) {
-                    ChemicalNetwork network = (ChemicalNetwork)tube.getTransmitterNetwork();
-                    if (!network.lastChemical.is(MekanismAPI.EMPTY_CHEMICAL_KEY) && !network.getChemicalTank().isEmpty() && ((Chemical)network.lastChemical.value()).isRadioactive()) {
+                    ChemicalNetwork network = tube.getTransmitterNetwork();
+                    if (!network.lastChemical.is(MekanismAPI.EMPTY_CHEMICAL_KEY) && !network.getChemicalTank().isEmpty() && network.lastChemical.value().isRadioactive()) {
                         return network.currentScale;
                     }
                 }
             } else {
                 IChemicalTank gasTank = tube.getChemicalTank();
                 if (!gasTank.isEmpty() && gasTank.getStack().isRadioactive()) {
-                    return (float)gasTank.getStored() / (float)gasTank.getCapacity();
+                    return gasTank.getStored() / (float) gasTank.getCapacity();
                 }
             }
         }
-
-        return 0.0F;
+        return 0;
     }
 
+    @Override
     public int getRadiationParticleCount() {
-        return MathUtils.clampToInt((double)(3.0F * this.getRadiationScale()));
+        return MathUtils.clampToInt(3 * getRadiationScale());
     }
 
     private List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
-        return this.chemicalHandlerManager.getContainers(side);
+        return chemicalHandlerManager.getContainers(side);
     }
 
+    @Override
     public void sideChanged(@NotNull Direction side, @NotNull ConnectionType old, @NotNull ConnectionType type) {
         super.sideChanged(side, old, type);
         if (type == ConnectionType.NONE) {
-            this.invalidateCapability(Capabilities.CHEMICAL.block(), side);
+            invalidateCapability(Capabilities.CHEMICAL.block(), side);
         } else if (old == ConnectionType.NONE) {
-            this.invalidateCapabilities();
+            invalidateCapabilities();
         }
-
     }
 
+    @Override
     public void redstoneChanged(boolean powered) {
         super.redstoneChanged(powered);
         if (powered) {
-            this.invalidateCapabilityAll(Capabilities.CHEMICAL.block());
+            invalidateCapabilityAll(Capabilities.CHEMICAL.block());
         } else {
-            this.invalidateCapabilities();
+            invalidateCapabilities();
         }
-
     }
 
+    @Override
     public String getComputerName() {
-        return this.getTransmitter().getTier().getBaseTier().getLowerName() + "PressurizedTube";
+        return getTransmitter().getTier().getBaseTier().getLowerName() + "PressurizedTube";
     }
 
     @ComputerMethod
     ChemicalStack getBuffer() {
-        return this.getTransmitter().getBufferWithFallback();
+        return getTransmitter().getBufferWithFallback();
     }
 
     @ComputerMethod
     long getCapacity() {
-        MGsOdditiesPressurizedTube tube = this.getTransmitter();
-        return tube.hasTransmitterNetwork() ? ((ChemicalNetwork)tube.getTransmitterNetwork()).getCapacity() : tube.getCapacity();
+        MGsOdditiesPressurizedTube tube = getTransmitter();
+        return tube.hasTransmitterNetwork() ? tube.getTransmitterNetwork().getCapacity() : tube.getCapacity();
     }
 
     @ComputerMethod
     long getNeeded() {
-        return this.getCapacity() - this.getBuffer().getAmount();
+        return getCapacity() - getBuffer().getAmount();
     }
 
     @ComputerMethod
     double getFilledPercentage() {
-        return (double)this.getBuffer().getAmount() / (double)this.getCapacity();
+        return getBuffer().getAmount() / (double) getCapacity();
     }
 }

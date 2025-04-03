@@ -1,5 +1,6 @@
 package github.mgrlyz.mgsoddities.common.registries.block;
 
+import github.mgrlyz.mgsoddities.MGsOddities;
 import github.mgrlyz.mgsoddities.api.tier.IAdvanceTier;
 import github.mgrlyz.mgsoddities.common.item.block.transmitter.*;
 import github.mgrlyz.mgsoddities.common.tile.transmitter.*;
@@ -23,18 +24,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MGsOdditiesBlocks {
-    public static final BlockDeferredRegister MGSODDITIES_BLOCKS = new BlockDeferredRegister("mgsoddities");
-
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> PARAGON_UNIVERSAL_CABLE;
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> APOTHEOSIS_UNIVERSAL_CABLE;
-    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> PARAGON_MECHANICAL_PIPE;
-    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> APOTHEOSIS_MECHANICAL_PIPE;
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> PARAGON_PRESSURIZED_TUBE;
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> APOTHEOSIS_PRESSURIZED_TUBE;
-    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> PARAGON_LOGISTICAL_TRANSPORTER;
-    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> APOTHEOSIS_LOGISTICAL_TRANSPORTER;
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> PARAGON_THERMODYNAMIC_CONDUCTOR;
-    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> APOTHEOSIS_THERMODYNAMIC_CONDUCTOR;
+    public static final BlockDeferredRegister MGSODDITIES_BLOCKS = new BlockDeferredRegister(MGsOddities.MODID);
+    
     public static final BlockRegistryObject<Block,BlockItem> STELLAR_MATTER_O;
     public static final BlockRegistryObject<Block,BlockItem> STELLAR_MATTER_F;
     public static final BlockRegistryObject<Block,BlockItem> STELLAR_MATTER_M;
@@ -45,7 +36,7 @@ public class MGsOdditiesBlocks {
     }
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(IAdvanceTier tier, String suffix, Function<MapColor, ? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
-        return registerTieredBlock(tier, suffix, (Supplier)(() -> (Block)blockSupplier.apply(tier.getAdvanceTier().getMapColor())), itemCreator);
+        return registerTieredBlock(tier, suffix, () -> blockSupplier.apply(tier.getAdvanceTier().getMapColor()), itemCreator);
     }
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(IAdvanceTier tier, String suffix, Supplier<? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
@@ -57,27 +48,32 @@ public class MGsOdditiesBlocks {
     }
 
     private static <BLOCK extends Block & IHasDescription> BlockRegistryObject<BLOCK, ItemBlockTooltip<BLOCK>> registerBlock(String name, Supplier<? extends BLOCK> blockSupplier) {
-        return MGSODDITIES_BLOCKS.register(name, blockSupplier, (x$0, x$1) -> new ItemBlockTooltip((Block)x$0, x$1));
+        return MGSODDITIES_BLOCKS.register(name, blockSupplier, ItemBlockTooltip::new);
     }
 
-    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> registerUniversalCable(String nameTier, BlockTypeTile<MGsOdditiesTileEntityUniversalCable> type) {
-        return registerTieredBlock(nameTier + "_universal_cable", () -> new BlockSmallTransmitter(type), MGsOdditiesItemBlockUniversalCable::new);
+    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> registerUniversalCable(
+            String nameTier, BlockTypeTile<MGsOdditiesTileEntityUniversalCable> type) {
+        return registerTieredBlock(nameTier + "_universal_cable", () -> new BlockSmallTransmitter<>(type), MGsOdditiesItemBlockUniversalCable::new);
     }
 
-    private static BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> registerMechanicalPipe(String nameTier, BlockTypeTile<MGsOdditiesTileEntityMechanicalPipe> type) {
-        return registerTieredBlock(nameTier + "_mechanical_pipe", () -> new BlockLargeTransmitter(type), MGsOdditiesItemBlockMechanicalPipe::new);
+    private static BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> registerMechanicalPipe(
+            String nameTier, BlockTypeTile<MGsOdditiesTileEntityMechanicalPipe> type) {
+        return registerTieredBlock(nameTier + "_mechanical_pipe", () -> new BlockLargeTransmitter<>(type), MGsOdditiesItemBlockMechanicalPipe::new);
     }
 
-    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> registerPressurizedTube(String nameTier, BlockTypeTile<MGsOdditiesTileEntityPressurizedTube> type) {
-        return registerTieredBlock(nameTier + "_pressurized_tube", () -> new BlockSmallTransmitter(type), MGsOdditiesItemBlockPressurizedTube::new);
+    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> registerPressurizedTube(
+            String nameTier, BlockTypeTile<MGsOdditiesTileEntityPressurizedTube> type) {
+        return registerTieredBlock(nameTier + "_pressurized_tube", () -> new BlockSmallTransmitter<>(type), MGsOdditiesItemBlockPressurizedTube::new);
     }
 
-    private static BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> registerLogisticalTransporter(String nameTier, BlockTypeTile<MGsOdditiesTileEntityLogisticalTransporter> type) {
-        return registerTieredBlock(nameTier + "_logistical_transporter", () -> new BlockLargeTransmitter(type), MGsOdditiesItemBlockLogisticalTransporter::new);
+    private static BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> registerLogisticalTransporter(
+            String nameTier, BlockTypeTile<MGsOdditiesTileEntityLogisticalTransporter> type) {
+        return registerTieredBlock(nameTier + "_logistical_transporter", () -> new BlockLargeTransmitter<>(type), MGsOdditiesItemBlockLogisticalTransporter::new);
     }
 
-    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> registerThermodynamicConductor(String nameTier, BlockTypeTile<MGsOdditiesTileEntityThermodynamicConductor> type) {
-        return registerTieredBlock(nameTier + "_thermodynamic_conductor", () -> new BlockSmallTransmitter(type), MGsOdditiesItemBlockThermodynamicConductor::new);
+    private static BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> registerThermodynamicConductor(
+            String nameTier, BlockTypeTile<MGsOdditiesTileEntityThermodynamicConductor> type) {
+        return registerTieredBlock(nameTier + "_thermodynamic_conductor", () -> new BlockSmallTransmitter<>(type), MGsOdditiesItemBlockThermodynamicConductor::new);
     }
 
     private static BlockRegistryObject<Block, BlockItem> registerStellarMatter(String nameTier) {
@@ -92,17 +88,22 @@ public class MGsOdditiesBlocks {
         MGSODDITIES_BLOCKS.register(eventBus);
     }
 
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> PARAGON_UNIVERSAL_CABLE = registerUniversalCable("paragon", MGsOdditiesBlockTypes.PARAGON_UNIVERSAL_CABLE);
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityUniversalCable>, MGsOdditiesItemBlockUniversalCable> APOTHEOSIS_UNIVERSAL_CABLE = registerUniversalCable("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_UNIVERSAL_CABLE);
+
+    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> PARAGON_MECHANICAL_PIPE = registerMechanicalPipe("paragon", MGsOdditiesBlockTypes.PARAGON_MECHANICAL_PIPE);
+    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityMechanicalPipe>, MGsOdditiesItemBlockMechanicalPipe> APOTHEOSIS_MECHANICAL_PIPE = registerMechanicalPipe("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_MECHANICAL_PIPE);
+
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> PARAGON_PRESSURIZED_TUBE = registerPressurizedTube("paragon", MGsOdditiesBlockTypes.PARAGON_PRESSURIZED_TUBE);
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityPressurizedTube>, MGsOdditiesItemBlockPressurizedTube> APOTHEOSIS_PRESSURIZED_TUBE = registerPressurizedTube("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_PRESSURIZED_TUBE);
+
+    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> PARAGON_LOGISTICAL_TRANSPORTER = registerLogisticalTransporter("paragon", MGsOdditiesBlockTypes.PARAGON_LOGISTICAL_TRANSPORTER);
+    public static final BlockRegistryObject<BlockLargeTransmitter<MGsOdditiesTileEntityLogisticalTransporter>, MGsOdditiesItemBlockLogisticalTransporter> APOTHEOSIS_LOGISTICAL_TRANSPORTER = registerLogisticalTransporter("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_LOGISTICAL_TRANSPORTER);
+
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> PARAGON_THERMODYNAMIC_CONDUCTOR = registerThermodynamicConductor("paragon", MGsOdditiesBlockTypes.PARAGON_THERMODYNAMIC_CONDUCTOR);
+    public static final BlockRegistryObject<BlockSmallTransmitter<MGsOdditiesTileEntityThermodynamicConductor>, MGsOdditiesItemBlockThermodynamicConductor> APOTHEOSIS_THERMODYNAMIC_CONDUCTOR = registerThermodynamicConductor("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_THERMODYNAMIC_CONDUCTOR);
+    
     static {
-        PARAGON_UNIVERSAL_CABLE = registerUniversalCable("paragon", MGsOdditiesBlockTypes.PARAGON_UNIVERSAL_CABLE);
-        APOTHEOSIS_UNIVERSAL_CABLE = registerUniversalCable("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_UNIVERSAL_CABLE);
-        PARAGON_MECHANICAL_PIPE = registerMechanicalPipe("paragon", MGsOdditiesBlockTypes.PARAGON_MECHANICAL_PIPE);
-        APOTHEOSIS_MECHANICAL_PIPE = registerMechanicalPipe("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_MECHANICAL_PIPE);
-        PARAGON_PRESSURIZED_TUBE = registerPressurizedTube("paragon", MGsOdditiesBlockTypes.PARAGON_PRESSURIZED_TUBE);
-        APOTHEOSIS_PRESSURIZED_TUBE = registerPressurizedTube("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_PRESSURIZED_TUBE);
-        PARAGON_LOGISTICAL_TRANSPORTER = registerLogisticalTransporter("paragon", MGsOdditiesBlockTypes.PARAGON_LOGISTICAL_TRANSPORTER);
-        APOTHEOSIS_LOGISTICAL_TRANSPORTER = registerLogisticalTransporter("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_LOGISTICAL_TRANSPORTER);
-        PARAGON_THERMODYNAMIC_CONDUCTOR = registerThermodynamicConductor("paragon", MGsOdditiesBlockTypes.PARAGON_THERMODYNAMIC_CONDUCTOR);
-        APOTHEOSIS_THERMODYNAMIC_CONDUCTOR = registerThermodynamicConductor("apotheosis", MGsOdditiesBlockTypes.APOTHEOSIS_THERMODYNAMIC_CONDUCTOR);
         STELLAR_MATTER_O = registerStellarMatter("o");
         STELLAR_MATTER_F = registerStellarMatter("f");
         STELLAR_MATTER_M = registerStellarMatter("m");
