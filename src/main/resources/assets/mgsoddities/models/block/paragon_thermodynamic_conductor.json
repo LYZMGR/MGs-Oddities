@@ -1,0 +1,9 @@
+{
+  "parent": "mekanism:block/transmitter/small/small",
+  "textures": {
+    "side": "mgsoddities:block/multipart/paragon/paragon_thermodynamic_conductor_vertical",
+    "center_down": "mgsoddities:block/multipart/paragon/paragon_thermodynamic_conductor",
+    "side_opaque": "mgsoddities:block/multipart/opaque/paragon/paragon_thermodynamic_conductor_vertical",
+    "center_opaque": "mgsoddities:block/multipart/paragon/paragon_thermodynamic_conductor"
+  }
+}

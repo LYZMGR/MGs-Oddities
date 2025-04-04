@@ -17,7 +17,7 @@ import java.util.function.IntFunction;
 
 public enum AdvanceTier implements StringRepresentable, SupportsColorMap {
     PARAGON("Paragon",new int[]{250, 238, 77}, MapColor.GOLD),
-    APOTHEOSIS("Apotheosis",new int[]{102, 153, 216}, MapColor.COLOR_LIGHT_BLUE);
+    APOTHEOSIS("Apotheosis",new int[]{216, 127, 51}, MapColor.COLOR_ORANGE);
 
     public static final IntFunction<AdvanceTier> BY_ID = ByIdMap.continuous(AdvanceTier::ordinal, values(), ByIdMap.OutOfBoundsStrategy.WRAP);
     public static final StreamCodec<ByteBuf, AdvanceTier> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, AdvanceTier::ordinal);

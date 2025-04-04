@@ -1,0 +1,9 @@
+{
+  "parent": "mekanism:block/transmitter/large/large",
+  "textures": {
+    "side": "mgsoddities:block/multipart/paragon/paragon_logistical_transporter_vertical",
+    "center_down": "mgsoddities:block/multipart/paragon/paragon_logistical_transporter",
+    "side_opaque": "mgsoddities:block/multipart/opaque/paragon/paragon_logistical_transporter_vertical",
+    "center_opaque": "mgsoddities:block/multipart/opaque/paragon/paragon_logistical_transporter"
+  }
+}

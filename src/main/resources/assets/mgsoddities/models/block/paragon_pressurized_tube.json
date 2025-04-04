@@ -1,0 +1,9 @@
+{
+  "parent": "mekanism:block/transmitter/small/small",
+  "textures": {
+    "side": "mgsoddities:block/multipart/paragon/paragon_pressurized_tube_vertical",
+    "center_down": "mgsoddities:block/multipart/paragon/paragon_pressurized_tube",
+    "side_opaque": "mgsoddities:block/multipart/opaque/paragon/paragon_pressurized_tube_vertical",
+    "center_opaque": "mgsoddities:block/multipart/paragon/paragon_pressurized_tube"
+  }
+}
