@@ -5,8 +5,7 @@
   "refmap": "mgsoddities.refmap.json",
   "mixins": [
     "MixinLogisticalTransporterBase",
-    "MixinMekanismRenderer",
-    "MekMGsOdditiesRenderer"
+    "MixinMekanismRenderer"
   ],
   "client": [
   ],

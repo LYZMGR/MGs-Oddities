@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "mgsoddities:alloy_aether"
+    },
+    "P": {
+      "item": "mgsoddities:paragon_mechanical_pipe"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PAP",
+    "PPP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "mgsoddities:apotheosis_mechanical_pipe"
+  }
+}

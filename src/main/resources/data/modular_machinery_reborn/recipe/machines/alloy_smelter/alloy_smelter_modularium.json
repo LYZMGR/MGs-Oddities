@@ -1,0 +1,85 @@
+{
+  "machine": "modular_machinery_reborn:alloy_smelter",
+  "type": "modular_machinery_reborn:machine_recipe",
+  "id": "modular_machinery_reborn:alloy_smelter_modularium",
+  "time": 120,
+  "width": 256,
+  "height": 256,
+  "requirements": [
+    {
+      "type": "modular_machinery_reborn:energy",
+      "mode": "input",
+      "amount": 20,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "output",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": "modular_machinery_reborn:modularium"
+        },
+        "count": 4
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": "minecraft:iron_ingot"
+        }
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": "minecraft:gold_ingot"
+        }
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": "minecraft:redstone"
+        }
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": "minecraft:glowstone_dust"
+        }
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}

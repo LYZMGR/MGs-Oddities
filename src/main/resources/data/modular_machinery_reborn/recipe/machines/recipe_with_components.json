@@ -1,0 +1,61 @@
+{
+  "type": "modular_machinery_reborn:machine_recipe",
+  "machine": "modular_machinery_reborn:iron_centrifuge",
+  "id": "modular_machinery_reborn:recipe_with_components",
+  "time": 1,
+  "width": 200,
+  "height": 150,
+  "progressX": 55,
+  "progressY": 25,
+  "requirements": [
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "output",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": {
+            "id": "modular_machinery_reborn:controller",
+            "components": {
+              "modular_machinery_reborn:machine": "modular_machinery_reborn:alloy_smelter"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 102,
+        "y": 8
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "item": {
+            "id": "minecraft:shield",
+            "components": {
+              "enchantments": {
+                "levels": {
+                  "minecraft:unbreaking": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 8,
+        "y": 62
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:energy",
+      "mode": "input",
+      "amount": 100000,
+      "position": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  ]
+}

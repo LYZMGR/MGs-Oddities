@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+     "A": {
+       "item": "mgsoddities:alloy_aether"
+     },
+     "B": {
+       "item": "mekanism:ultimate_control_circuit"
+     }
+  },
+  "pattern": [
+   "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "modular_machinery_reborn:controller",
+    "modular_machinery_reborn:machine": "modular_machinery_reborn:dyson_sphere"
+  }
+}

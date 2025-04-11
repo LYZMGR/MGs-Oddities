@@ -1,0 +1,52 @@
+{
+  "machine": "modular_machinery_reborn:alloy_smelter",
+  "type": "modular_machinery_reborn:machine_recipe",
+  "id": "modular_machinery_reborn:alloy_smelter_diamond",
+  "time": 100,
+  "width": 256,
+  "height": 256,
+  "requirements": [
+    {
+      "type": "modular_machinery_reborn:energy",
+      "mode": "input",
+      "amount": 128,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:item",
+      "mode": "input",
+      "sizedIngredient": {
+        "ingredient": {
+          "tag": "minecraft:planks"
+        },
+        "count": 2
+      },
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:fluid",
+      "mode": "input",
+      "fluid": "minecraft:water",
+      "amount": 1000,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "modular_machinery_reborn:loot_table",
+      "table": "minecraft:chests/ancient_city",
+      "luck": 0,
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ]
+}

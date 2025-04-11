@@ -1,0 +1,18 @@
+{
+  "type": "modular_machinery_reborn:machine_recipe",
+  "machine": "modular_machinery_reborn:power_transformer",
+  "id": "modular_machinery_reborn:power_transformer_energy_transform",
+  "time": 1,
+  "requirements": [
+    {
+      "type": "modular_machinery_reborn:experience",
+      "mode": "output",
+      "amount": 100
+    },
+    {
+      "type": "modular_machinery_reborn:experience",
+      "mode": "input",
+      "amount": 100
+    }
+  ]
+}

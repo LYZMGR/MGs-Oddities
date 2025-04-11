@@ -67,12 +67,16 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
     implementation "mekanism:Mekanism:${mekanism_version}"
     runtimeOnly "mekanism:Mekanism:${mekanism_version}:additions"
-    runtimeOnly "curse.maven:modular-machinery-reborn-1083840:6117838"
+    runtimeOnly "curse.maven:KubeJs-238086:5810100"
     runtimeOnly "curse.maven:experiencelib-1156551:5992832"
     runtimeOnly "curse.maven:EMI-580555:6205506"
     runtimeOnly "curse.maven:Forgematica-912441:6140034"
     runtimeOnly "curse.maven:MaFgLib-910766:6283570"
     runtimeOnly "curse.maven:WorldEdit-225608:5830452"
+    runtimeOnly "curse.maven:Spark-361579:6225208"
+    runtimeOnly "curse.maven:Rhino-416294:6184623"
+    runtimeOnly "curse.maven:Modular-Machinery-Reborn-1083840:6117838"
+    runtimeOnly "curse.maven:In-game-NBTEdit-Reborn-678133:6125444"
 }
 
 tasks.withType(ProcessResources).configureEach {

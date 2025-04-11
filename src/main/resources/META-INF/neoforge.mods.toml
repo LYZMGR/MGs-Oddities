@@ -78,10 +78,3 @@ type="required"
 versionRange="[10.7.10,)"
 ordering="NONE"
 side="BOTH"
-
-[[dependencies.${mod_id}]]
-modId="modular_machinery_reborn"
-type="required"
-versionRange="[2.1.5,)"
-ordering="NONE"
-side="BOTH"

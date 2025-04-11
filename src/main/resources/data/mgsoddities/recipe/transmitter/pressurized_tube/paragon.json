@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "mgsoddities:alloy_primordial"
+    },
+    "P": {
+      "item": "mekanism:ultimate_pressurized_tube"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PAP",
+    "PPP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "mgsoddities:paragon_pressurized_tube"
+  }
+}
