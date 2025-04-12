@@ -31,6 +31,9 @@ public class MGsOdditiesBlocks {
     public static final BlockRegistryObject<Block,BlockItem> STELLAR_MATTER_M;
     public static final BlockRegistryObject<Block,BlockItem> DYSON_SPHERE_FRAME;
     public static final BlockRegistryObject<Block,BlockItem> DYSON_SPHERE_SHELL;
+    public static final BlockRegistryObject<Block,BlockItem> SIPHON_ARRAY;
+    public static final BlockRegistryObject<Block,BlockItem> PLASMA_REFINING_CHAMBER;
+    public static final BlockRegistryObject<Block,BlockItem> ANTIGRAVITY_FRAME;
 
     public MGsOdditiesBlocks() {
     }
@@ -107,7 +110,10 @@ public class MGsOdditiesBlocks {
         STELLAR_MATTER_O = registerStellarMatter("o");
         STELLAR_MATTER_F = registerStellarMatter("f");
         STELLAR_MATTER_M = registerStellarMatter("m");
-        DYSON_SPHERE_SHELL = MGSODDITIES_BLOCKS.register("dyson_sphere_shell",() ->new Block(BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
-        DYSON_SPHERE_FRAME = MGSODDITIES_BLOCKS.register("dyson_sphere_frame",() ->new Block(BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+        SIPHON_ARRAY = MGSODDITIES_BLOCKS.register("siphon_array",() -> new Block((BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL))));
+        ANTIGRAVITY_FRAME = MGSODDITIES_BLOCKS.register("antigravity_frame",() -> new Block((BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL))));
+        PLASMA_REFINING_CHAMBER = MGSODDITIES_BLOCKS.register("plasma_refining_chamber",() -> new Block(BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL).lightLevel(state -> 10)));
+        DYSON_SPHERE_SHELL = MGSODDITIES_BLOCKS.register("dyson_sphere_shell",() -> new Block(BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
+        DYSON_SPHERE_FRAME = MGSODDITIES_BLOCKS.register("dyson_sphere_frame",() -> new Block(BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.METAL)));
     }
 }

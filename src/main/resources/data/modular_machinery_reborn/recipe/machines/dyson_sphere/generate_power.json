@@ -1,0 +1,13 @@
+{
+  "type": "modular_machinery_reborn:machine_recipe",
+  "machine": "modular_machinery_reborn:dyson_sphere",
+  "id": "modular_machinery_reborn:generate_power",
+  "time": 1,
+  "requirements": [
+    {
+      "type": "modular_machinery_reborn:energy",
+      "mode": "output",
+      "amount": 51200
+    }
+  ]
+}

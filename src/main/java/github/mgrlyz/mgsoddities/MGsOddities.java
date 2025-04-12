@@ -3,6 +3,8 @@ package github.mgrlyz.mgsoddities;
 import com.mojang.logging.LogUtils;
 import github.mgrlyz.mgsoddities.common.capabilities.MGsOdditiesCapabilities;
 import github.mgrlyz.mgsoddities.common.config.MGsOdditiesConfig;
+import github.mgrlyz.mgsoddities.common.recipe.MGsOdditiesRecipe;
+import github.mgrlyz.mgsoddities.common.recipe.MGsOdditiesRecipeSerializer;
 import github.mgrlyz.mgsoddities.common.registries.MGsOdditiesCreativeTabs;
 import github.mgrlyz.mgsoddities.common.registries.MGsOdditiesTileEntityTypes;
 import github.mgrlyz.mgsoddities.common.registries.block.MGsOdditiesBlocks;
@@ -37,6 +39,9 @@ public class MGsOddities {
         MGsOdditiesTileEntityTypes.register(modEventBus);
         MGsOdditiesCreativeTabs.register(modEventBus);
         versionNumber = new Version(modContainer);
+
+        MGsOdditiesRecipe.RECIPE_TYPES.register(modEventBus);
+        MGsOdditiesRecipeSerializer.RECIPE_SERIALIZER.register(modEventBus);
     }
 
     public static ResourceLocation rl(String path) {

@@ -1,6 +1,6 @@
 {
-  "registryName": "dyson_sphere",
-  "localizedName": "Dyson Sphere",
+  "registryName": "dyson_sphere_o",
+  "localizedName": "戴森球: O级",
   "color": "#ffe81ecd",
   "structure": {
     "pattern": [
@@ -2457,7 +2457,7 @@
         "minecraft:stone"
       ],
       "e": [
-        "minecraft:gold_block"
+        "mgsoddities:stellar_matter_o"
       ],
       "f": [
         "#modular_machinery_reborn:energyoutputhatch"
